@@ -18,8 +18,9 @@
 				<?php echo $this->fetch('content'); ?>
 			</div>
 			<div class="footer">
+				desenvolvido por <?php echo $this->Html->link('Guilherme Jr.', 'http://www.guilhermejr.net', array('target' => '_blank')); ?>
 			</div>
 		</div>
-		<?php echo $this->element('sql_dump'); ?>
+		<?php //echo $this->element('sql_dump'); ?>
 	</body>
 </html>

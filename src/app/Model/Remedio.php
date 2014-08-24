@@ -12,7 +12,7 @@ class Remedio extends AppModel {
 		)
 	);
 	public $useTable = 'remedios';
-	public $order = array('Remedio.nome' => 'ASC');
+	public $order = array('Remedio.validade' => 'ASC');
 	public $displayField = 'nome';
 
 }

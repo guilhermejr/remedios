@@ -1,0 +1,38 @@
+p {
+	text-align: justify;
+}
+
+.footer {
+	border-top: 1px solid #eee;
+	text-align: center;
+	margin-top: 20px;
+	padding-bottom: 10px;
+}
+
+/* desktop */
+@media only screen and (min-width: 901px) {
+	.container {
+		max-width: 910px;
+	}
+}
+
+/* tablets maiores */
+@media only screen and (min-width: 820px) and (max-width: 900px) {
+	.container {
+		max-width: 766px;
+	}
+}
+
+/* tablets menores */
+@media only screen and (min-width: 766px) and (max-width: 819px) {
+	.container {
+		max-width: 765px;
+	}
+}
+
+/* smartphones */
+@media only screen and (max-width: 765px) {
+	.container {
+		max-width: 640px;
+	}
+}

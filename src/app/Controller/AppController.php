@@ -35,7 +35,7 @@ class AppController extends Controller {
 
 	// --- Carrega o componente de Autenticação e Sessão ---
 	public $components = array('Auth', 'Session');
-	public $helpers = array ('Html', 'Form');
+	public $helpers = array ('Html', 'Form', 'Time');
 
 	public function beforeFilter() { 
 

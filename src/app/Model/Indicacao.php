@@ -11,7 +11,7 @@ class Indicacao extends AppModel {
 		)
 	);
 	public $useTable = 'indicacoes';
+	public $order = array('Indicacao.descricao' => 'ASC');
 	public $displayField = 'descricao';
-
 
 }
