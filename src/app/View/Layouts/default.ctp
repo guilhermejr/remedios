@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Remédios</title>
 		<?php
-			echo $this->Html->css(array('estilo.css', 'bootstrap.min.css', 'bootstrap-theme.min.css', 'jquery-ui.css'));
+			echo $this->Html->css(array('bootstrap.min.css', 'bootstrap-theme.min.css', 'jquery-ui.css', 'estilo.css'));
 			echo $this->Html->script(array('bootstrap.min.js', 'jquery.js', 'jquery-ui.js'));
 		?>
 	</head>
