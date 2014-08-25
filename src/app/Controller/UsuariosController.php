@@ -14,7 +14,7 @@ class UsuariosController extends AppController {
 			if ($this->Auth->login()) {
 				$this->redirect($this->Auth->redirectUrl());
 			} else {
-				$this->Session->setFlash('Inválida combinação de E-mail e Senha!', 'default', array('class' => 'alert alert-danger'));
+				$this->Session->setFlash('Inválida combinação de <br> E-mail e Senha!', 'default', array('class' => 'alert alert-danger'));
 			}
 		}
 

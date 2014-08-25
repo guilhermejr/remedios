@@ -1,5 +1,3 @@
-<h2>Acesso ao Sistema</h2>
-
 <?php
 
 echo $this->Session->flash();

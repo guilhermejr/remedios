@@ -1,14 +1,15 @@
 body {
   	padding-top: 40px;
   	background-color: #eee;
+    margin: 0;
 }
 
-h2 {
+h3 {
 	text-align: center;
 }
 
 .alert {
-	max-width: 300px;
+	max-width: 250px;
   	margin: 20px auto 0;
   	text-align: center;
 }
@@ -19,7 +20,7 @@ h2 {
 }
 
 .form-signin {
-  	max-width: 330px;
+  	max-width: 290px;
   	padding: 15px;
   	margin: 0 auto;
 }
@@ -39,4 +40,9 @@ h2 {
 }
 .form-signin input[type="submit"] {
   	margin-top: 20px;
+}
+
+.panel {
+  width: 270px;
+  margin: 0 auto;
 }
