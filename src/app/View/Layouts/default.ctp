@@ -22,7 +22,7 @@
 				        <span class="icon-bar"></span>
 				        <span class="icon-bar"></span>
 				      </button>
-				      <a class="navbar-brand" href="/remedios/listar">Principal <span class="badge">42</span></a>
+				      <a class="navbar-brand" href="/remedios/listar">Principal <span class="badge"><?php echo $this->Session->read('qtdRemedios'); ?></span></a>
 				    </div>
 
 				    <!-- Collect the nav links, forms, and other content for toggling -->
