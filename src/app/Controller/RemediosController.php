@@ -24,6 +24,12 @@ class RemediosController extends AppController {
 	// --- ver ----------------------------------------------------------------
 	public function ver($id) {
 
+		// --- Verifica se o remédio existe ---
+		$this->Remedio->id = $id;
+		if (!$this->Remedio->exists()) {
+			return $this->redirect('/remedios/listar');
+		}
+
 		// --- Busca o remédio com o id indicado ---
 		$this->Remedio->id = $id;
 		$dados = $this->Remedio->read();
