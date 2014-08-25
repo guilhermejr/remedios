@@ -11,6 +11,15 @@ p {
 	margin-bottom: 20px;
 }
 
+.form-control {
+  	margin-bottom: 20px;
+  	font-size: 16px;
+}
+
+.submit {
+	text-align: center;
+}
+
 .footer {
 	text-align: center;
 	margin-top: 20px;
