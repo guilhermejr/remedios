@@ -1,3 +1,7 @@
+body {
+	margin-top: 10px;
+}
+
 p {
 	text-align: justify;
 }
@@ -14,6 +18,14 @@ p {
 	.container {
 		max-width: 910px;
 	}
+
+	p {
+		font-size: 18px;
+	}
+
+	ul {
+		font-size: 18px;
+	}
 }
 
 /* tablets maiores */
@@ -21,12 +33,28 @@ p {
 	.container {
 		max-width: 766px;
 	}
+
+	p {
+		font-size: 18px;
+	}
+
+	ul {
+		font-size: 18px;
+	}
 }
 
 /* tablets menores */
 @media only screen and (min-width: 766px) and (max-width: 819px) {
 	.container {
 		max-width: 765px;
+	}
+
+	p {
+		font-size: 18px;
+	}
+
+	ul {
+		font-size: 18px;
 	}
 }
 

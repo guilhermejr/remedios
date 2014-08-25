@@ -21,7 +21,3 @@
 	<b>Contra-Indicação: </b><br>
 	<?php echo $dados['Remedio']['contraIndicacao']; ?>
 </p>
-
-<center>
-	<?php echo $this->Html->link('Voltar', array('controller' => 'Remedios', 'action' => 'listar'), array('class' => 'btn btn-small btn-primary')); ?>
-</center>
