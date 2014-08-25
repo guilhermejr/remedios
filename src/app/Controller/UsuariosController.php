@@ -16,8 +16,14 @@ class UsuariosController extends AppController {
 				// --- Carrega modelo Remedio ----
 				$this->loadModel('Remedio');
 				$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id')))));
+
+				// --- Atualiza a data e hora do ultimo acesso ---
+				$this->Usuario->id = $this->Auth->user('id');
+				$this->Usuario->save(array('ultimoAcesso' => date('Y-m-d H:i:s')));
+
+				// --- Redireciona para a tela principal ---
 				$this->redirect($this->Auth->redirectUrl());
-				
+
 			} else {
 				$this->Session->setFlash('Inválida combinação de <br> E-mail e Senha!', 'default', array('class' => 'alert alert-danger'));
 			}
