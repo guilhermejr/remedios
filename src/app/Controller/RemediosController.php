@@ -17,7 +17,11 @@ class RemediosController extends AppController {
 		$remedios = $this->Remedio->find('all', $params);
 		
 		// --- Envia para a view ---
-		$this->set('remedios', $remedios);
+		$dados = array (
+			'remedios' => $remedios,
+			'titulo' => 'Lista de remédios'
+		);
+		$this->set($dados);
 
 	}
 
@@ -32,10 +36,14 @@ class RemediosController extends AppController {
 
 		// --- Busca o remédio com o id indicado ---
 		$this->Remedio->id = $id;
-		$dados = $this->Remedio->read();
+		$remedio = $this->Remedio->read();
 
 		// --- Envia para a view ---
-		$this->set('dados', $dados);
+		$dados = array (
+			'remedio' => $remedio,
+			'titulo' => $remedio['Remedio']['nome']
+		);
+		$this->set($dados);
 
 	}
 

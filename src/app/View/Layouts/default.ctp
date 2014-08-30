@@ -58,8 +58,13 @@
 				</nav>
 			</div>
 			<div class="content">
-				<?php echo $this->Session->flash(); ?>
-				<?php echo $this->fetch('content'); ?>
+				<div class="panel panel-primary">
+					<div class="panel-heading"><h3><?php echo $titulo; ?></h3></div>
+					<div class="panel-body">
+						<?php echo $this->Session->flash(); ?>
+						<?php echo $this->fetch('content'); ?>
+					</div>
+				</div>
 			</div>
 			<div class="footer">
 				desenvolvido por <?php echo $this->Html->link('Guilherme Jr.', 'http://www.guilhermejr.net', array('target' => '_blank')); ?>

@@ -81,6 +81,9 @@ class UsuariosController extends AppController {
 			}
 		}
 
+		// --- Título da página ---
+		$this->set('titulo', 'Trocar Senha');
+
 	}
 
 	// --- adicionar ----------------------------------------------------------
