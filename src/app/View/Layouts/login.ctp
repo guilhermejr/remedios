@@ -6,7 +6,7 @@
 		<title>Remédios</title>
 		<?php
 			echo $this->Html->css(array('bootstrap.min.css', 'bootstrap-theme.min.css', 'jquery-ui.css', 'login.css'));
-			echo $this->Html->script(array('bootstrap.min.js', 'jquery.js', 'jquery-ui.js'));
+			echo $this->Html->script(array('jquery.js', 'bootstrap.min.js', 'jquery-ui.js'));
 		?>
 	</head>
 	<body>
