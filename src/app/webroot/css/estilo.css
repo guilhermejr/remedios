@@ -1,7 +1,3 @@
-body {
-	margin-top: 10px;
-}
-
 h1, h2, h3, h4, h5, h6 {
 	text-align: center;
 }
@@ -28,6 +24,11 @@ p {
 
 /* desktop */
 @media only screen and (min-width: 901px) {
+
+	body {
+		margin-top: 60px;
+	}
+
 	.container {
 		max-width: 910px;
 	}
@@ -43,6 +44,11 @@ p {
 
 /* tablets maiores */
 @media only screen and (min-width: 820px) and (max-width: 900px) {
+
+	body {
+		margin-top: 60px;
+	}
+
 	.container {
 		max-width: 766px;
 	}
@@ -58,6 +64,11 @@ p {
 
 /* tablets menores */
 @media only screen and (min-width: 766px) and (max-width: 819px) {
+
+	body {
+		margin-top: 60px;
+	}
+
 	.container {
 		max-width: 765px;
 	}
@@ -73,6 +84,11 @@ p {
 
 /* smartphones */
 @media only screen and (max-width: 765px) {
+
+	body {
+		margin-top: 60px;
+	}
+
 	.container {
 		max-width: 640px;
 	}

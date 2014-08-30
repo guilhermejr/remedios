@@ -9,17 +9,17 @@
 			echo $this->Html->script(array('jquery.js', 'bootstrap.min.js', 'jquery-ui.js'));
 		?>
 		<script>
-		function logout() {
-			if(confirm('Deseja realmente sair do sistema?')) {
-				window.location.href='/usuarios/logout'
+			function logout() {
+				if(confirm('Deseja realmente sair do sistema?')) {
+					window.location.href='/usuarios/logout'
+				}
 			}
-		}
 		</script>
 	</head>
 	<body>
 		<div class="container">
 			<div class="header">
-				<nav class="navbar navbar-default" role="navigation">
+				<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 				  <div class="container-fluid">
 				    <!-- Brand and toggle get grouped for better mobile display -->
 				    <div class="navbar-header">
