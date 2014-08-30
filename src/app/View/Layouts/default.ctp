@@ -8,6 +8,13 @@
 			echo $this->Html->css(array('bootstrap.min.css', 'bootstrap-theme.min.css', 'jquery-ui.css', 'estilo.css'));
 			echo $this->Html->script(array('jquery.js', 'bootstrap.min.js', 'jquery-ui.js'));
 		?>
+		<script>
+		function logout() {
+			if(confirm('Deseja realmente sair do sistema?')) {
+				window.location.href='/usuarios/logout'
+			}
+		}
+		</script>
 	</head>
 	<body>
 		<div class="container">
@@ -42,7 +49,7 @@
 				          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo AuthComponent::user('nome'); ?> <span class="caret"></span></a>
 				          <ul class="dropdown-menu" role="menu">
 				            <li><a href="/usuarios/trocarSenha">Trocar Senha</a></li>
-				            <li><a href="/usuarios/logout">Sair</a></li>
+				            <li><a href="#" onclick="logout();">Sair</a></li>
 				          </ul>
 				        </li>
 				      </ul>
