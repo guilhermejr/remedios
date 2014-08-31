@@ -1,5 +1,10 @@
 <IfModule mod_rewrite.c>
    RewriteEngine on
+   
+   # Force https for s site
+   RewriteCond %{HTTPS} !=on [NC]
+   RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+
    RewriteRule    ^$ app/webroot/    [L]
    RewriteRule    (.*) app/webroot/$1 [L]
 </IfModule>
