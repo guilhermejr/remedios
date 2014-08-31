@@ -1,0 +1,44 @@
+<VirtualHost *:80>
+
+    DocumentRoot /var/www
+
+   <Directory />
+        Options FollowSymLinks
+        AllowOverride All
+   </Directory>
+   <Directory /var/www>
+       Options FollowSymLinks MultiViews
+       AllowOverride All
+       Order allow,deny
+       allow from all
+   </Directory>
+
+</VirtualHost>
+
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+
+        DocumentRoot /var/www
+
+        SSLEngine on
+
+        SSLCertificateFile /etc/apache2/ssl/apache.crt
+        SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+
+   <Directory />
+        Order Deny,Allow
+        Deny from all
+        Options All
+        AllowOverride All
+   </Directory>
+
+   <Directory /var/www/>
+       Options FollowSymLinks MultiViews
+       AllowOverride All
+       Order allow,deny
+       allow from all
+   </Directory>
+
+</VirtualHost>
+
+</IfModule>

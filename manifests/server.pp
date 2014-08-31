@@ -1,5 +1,4 @@
 # Variáveis para a criação do banco de dados
-
 $usuarioBancodedados = "remedios"
 $senhaBancodedados = "remedios"
 $nomeBancodedados = "remedios"
@@ -14,7 +13,7 @@ exec { "apt-update":
 }
 
 # Instala os serviços necessários
-package { ["mysql-server", "phpmyadmin", "apache2"]:
+package { ["mysql-server", "phpmyadmin", "apache2", "openssl"]:
 	ensure	=> installed,
 	require	=> Exec["apt-update"],
 }
@@ -52,14 +51,6 @@ exec { "usuarioApache":
 	notify	=> Service["apache2"],
 }
 
-# Substitui None por All
-exec { "substituiNoneAll":
-	onlyif	=> "grep -c 'None' /etc/apache2/sites-enabled/000-default",
-	command	=> "sed -i 's/None/All/' /etc/apache2/sites-enabled/000-default",
-	require	=> Package["apache2"],
-	notify	=> Service["apache2"],
-}
-
 # Apaga o arquivo index.html dentro de /var/www
 exec { "apagarIndex":
 	onlyif	=> "cat /var/www/index.html",
@@ -73,6 +64,37 @@ exec { "habilitaModRewrite":
 	command	=> "a2enmod rewrite",
 	require	=> Package["apache2"],
 	notify	=> Service["apache2"],
+}
+
+# Habilita o ssl no apache
+exec { "habilitaSSL":
+	command	=> "a2enmod ssl",
+	require	=> Package["apache2"],
+	notify	=> Service["apache2"],
+}
+
+# Cria a pasta para colocar o certificado
+exec { "criarPastaCertificado":
+	unless	=> "ls /etc/apache2/ssl",
+	command	=> "mkdir -p /etc/apache2/ssl",
+	require	=> Package["apache2"],
+}
+
+# Cria o certificado SSL
+exec { "criarCertificadoSSL":
+	unless	=> "cat /etc/apache2/ssl/apache.key",
+	command => "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj \"/C=BR/ST=Bahia/L=Salvador/O=GuilhermeJr/CN=guilhermejr\" -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt",
+	require => Exec["criarPastaCertificado"],
+	notify	=> Service["apache2"],
+}
+
+# Novas configurações para o apache
+file { "/etc/apache2/sites-enabled/000-default":
+	owner	=> root,
+	group	=> root,
+	mode 	=> 0644,
+	content	=> template("/vagrant/manifests/000-default"),
+	require	=> Package["apache2"],
 }
 
 # Configura o phpmyadmin
@@ -94,12 +116,19 @@ exec { "senhaRootMysql":
 exec { "bancodedados":
 	unless	=> "mysql -uroot -p$senhaRootBancodedados $nomeBancodedados",
 	command	=> "mysqladmin -uroot -p$senhaRootBancodedados create $nomeBancodedados",
-	require	=> Exec["senhaRootMysql"]
+	require	=> Exec["senhaRootMysql"],
 }
 
 # Cria o usuário para o banco de dados criado no comando anterior
-exec { "usuarioBancodedados":
+exec { "criarUsuarioBancodedados":
 	unless	=> "mysql -u$usuarioBancodedados -p$senhaBancodedados $nomeBancodedados",
 	command	=> "mysql -uroot -p$senhaRootBancodedados -e \"GRANT ALL PRIVILEGES ON $nomeBancodedados.* TO '$usuarioBancodedados'@'localhost' IDENTIFIED BY '$senhaBancodedados';\"",
 	require	=> Exec["bancodedados"],
+}
+
+# Importa a estrutura do banco de dados 
+exec { "importarSQL":
+	unless	=> "mysql -u$usuarioBancodedados -p$senhaBancodedados remedios -e \"SELECT * FROM usuarios\"",
+	command	=> "mysql -u$usuarioBancodedados -p$senhaBancodedados -D $nomeBancodedados < /vagrant/docs/remedios.sql",
+	require	=> Exec["criarUsuarioBancodedados"],
 }
