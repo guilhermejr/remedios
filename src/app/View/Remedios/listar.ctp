@@ -6,10 +6,16 @@
 		</tr>
 	</thead>
 	<tbody>
+		<?php if (count($remedios)) { ?>
 		<?php foreach ($remedios as $remedio) { ?>
 		<tr>
 			<td><?php echo $this->Html->link($remedio['Remedio']['nome'], array('controller' => 'remedios', 'action' => 'ver', $remedio['Remedio']['id'])); ?></td>
 			<td><?php echo $this->Time->timeAgoInWords($remedio['Remedio']['validade'], array('format' => 'd/m/Y', 'end' => '+10 year')); ?></td>
+		</tr>
+		<?php } ?>
+		<?php } else { ?>
+		<tr>
+			<td colspan="2">Nenhum remédio encontrado.</td>
 		</tr>
 		<?php } ?>
 	</tbody>
