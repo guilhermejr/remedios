@@ -8,6 +8,11 @@ h3 {
 	text-align: center;
 }
 
+#texto {
+  text-align: justify;
+  margin-bottom: 20px;
+}
+
 .alert {
 	max-width: 250px;
   	margin: 20px auto 0;

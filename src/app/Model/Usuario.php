@@ -19,6 +19,7 @@ class Usuario extends AppModel {
 	public $useTable = 'usuarios';
 	public $hasMany = array('Remedio');
 	public $displayField = 'nome';
+	public $recursive = -1;
 
 	public $validade = array (
 		'nome' => array (

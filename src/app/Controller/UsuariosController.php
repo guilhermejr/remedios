@@ -48,7 +48,7 @@ class UsuariosController extends AppController {
 
 			// --- Checa se os campos foram preenchidos ---
 			if (empty($dados['Usuario']['senhaAtual']) || empty($dados['Usuario']['novaSenha']) || empty($dados['Usuario']['ConfirmarNovaSenha'])) {
-				$this->Session->setFlash('Todos os campos têm que serem preenchidos.', 'default', array('class' => 'alert alert-danger'));
+				$this->Session->setFlash('Todos os campos devem ser preenchidos.', 'default', array('class' => 'alert alert-danger'));
 				return $this->redirect($this->referer());
 			}
 
@@ -83,6 +83,53 @@ class UsuariosController extends AppController {
 
 		// --- Título da página ---
 		$this->set('titulo', 'Trocar Senha');
+
+	}
+
+	// --- lembrar ------------------------------------------------------------
+	function lembrar() {
+
+		// --- Seta o layout dessa action ---
+		$this->layout = 'login';
+
+		// --- Se o formulário for submetido ---
+		if ($this->request->is('post') && !empty($this->request->data)) {
+
+			$dados = $this->request->data;
+
+			// --- Checa se o e-mail foi preenchidos ---
+			if (empty($dados['Usuario']['email'])) {
+				$this->Session->setFlash('É necessário informar um E-mail', 'default', array('class' => 'alert alert-danger'));
+				return $this->redirect($this->referer());
+			}
+
+			// --- Pega os dados do usuário do banco de dados ---
+			$usuario = $this->Usuario->findByEmail($dados['Usuario']['email']);
+
+			// --- Checa se o e-mail é válido ---
+			if (empty($usuario)) {
+				$this->Session->setFlash('E-mail inválido.', 'default', array('class' => 'alert alert-danger'));
+				return $this->redirect($this->referer());
+			} else {
+
+				App::uses('CakeEmail', 'Network/Email');
+
+				$Email = new CakeEmail();
+				$Email->from(array('remedios@guilhermejr.net' => 'Remédios'));
+				$Email->to($usuario['Usuario']['email']);
+				$Email->subject('Remédios - Solicitação de troca de senha.');
+				$texto = "Olá ". $usuario['Usuario']['nome'] ."\n\n";
+				$texto.= "Para cadastrar uma nova senha click no link abaixo:\n";
+				$texto.= Router::fullbaseUrl() . "/usuarios/novaSenha/". sha1(date('dmYHisu')) ."\n\n";
+				$texto.="Mas se não tiver pedido para trocar de senha, é só ignorar este e-mail e continuar usando a sua senha atual.\n\n";
+				$texto.="Guilherme Jr.";
+				$Email->send($texto);
+
+				$this->Session->setFlash('Foi enviado um e-mail para <b>'. $usuario['Usuario']['email'] .'</b> com as instruções e o link para você trocar a senha.', 'default', array('class' => 'alert alert-success'));
+				return $this->redirect($this->referer());
+			}
+
+		}
 
 	}
 

@@ -76,6 +76,6 @@ class AppController extends Controller {
 		$this->Auth->flash['params']['class'] = 'alert alert-danger';
 
 		// --- Libera acesso ao logout ---
-		$this->Auth->allow(array('logout'));
+		$this->Auth->allow(array('logout', 'lembrar'));
 	}
 }
