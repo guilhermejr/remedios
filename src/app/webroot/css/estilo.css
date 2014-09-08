@@ -22,6 +22,14 @@ p {
 	padding-bottom: 10px;
 }
 
+.checkbox {
+	margin-left: 50px;
+}
+
+#indicacao {
+	font-weight: bold;
+}
+
 /* desktop */
 @media only screen and (min-width: 901px) {
 
@@ -33,13 +41,10 @@ p {
 		max-width: 910px;
 	}
 
-	p {
+	p, ul, #indicacao {
 		font-size: 18px;
 	}
 
-	ul {
-		font-size: 18px;
-	}
 }
 
 /* tablets maiores */
@@ -53,13 +58,10 @@ p {
 		max-width: 766px;
 	}
 
-	p {
+	p, ul, #indicacao {
 		font-size: 18px;
 	}
 
-	ul {
-		font-size: 18px;
-	}
 }
 
 /* tablets menores */

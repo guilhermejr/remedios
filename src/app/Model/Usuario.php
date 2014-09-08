@@ -17,7 +17,7 @@ class Usuario extends AppModel {
 	}
 
 	public $useTable = 'usuarios';
-	public $hasMany = array('Remedio');
+	public $hasMany = array('Remedio', 'Indicacao');
 	public $displayField = 'nome';
 	public $recursive = -1;
 

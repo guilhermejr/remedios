@@ -47,4 +47,52 @@ class RemediosController extends AppController {
 
 	}
 
+	// --- buscar -------------------------------------------------------------
+	public function buscar() {
+
+		// --- Busca as indicações ---
+		$this->loadModel('Indicacao');
+		$indicacoes = $this->Indicacao->findAllByUsuarioId($this->Auth->user('id'));
+
+		// --- Envia para a view ---
+		$dados = array (
+			'indicacoes' => $indicacoes,
+			'titulo' => 'Buscar'
+		);
+		$this->set($dados);
+
+	}
+
+	// --- resultadoBusca -----------------------------------------------------
+	public function resultadoBusca() {
+
+		// --- Se o formulário for submetido ---
+		if ($this->request->is('post') && !empty($this->request->data)) {
+
+			$dados = $this->request->data;
+
+			// --- Busca os remédios com as indicações escolhidas ---
+			$remedios = $this->Remedio->Indicacao->find('all', array(
+					'conditions' => array(
+						'Indicacao.id' => $dados['Remedio']['Indicacao']
+					)				)
+			);
+
+			// --- Envia para a view ---
+			$dados = array (
+				'indicacoes' => $remedios,
+				'titulo' => 'Resultado da busca'
+			);
+			$this->set($dados);
+
+			
+		} else {
+
+			// --- Se não for post redireciona para buscar ---
+			return $this->redirect('/remedios/buscar');
+
+		}
+
+	}
+
 }

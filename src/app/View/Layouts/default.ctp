@@ -42,7 +42,7 @@
 				            <li><a href="#">Indicação</a></li>
 				          </ul>
 				        </li>
-				        <li><a href="#">Buscar</a></li>
+				        <li><a href="/remedios/buscar">Buscar</a></li>
 				      </ul>
 				      <ul class="nav navbar-nav navbar-right">
 				        <li class="dropdown">
