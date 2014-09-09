@@ -52,7 +52,7 @@ class RemediosController extends AppController {
 
 		// --- Busca as indicações ---
 		$this->loadModel('Indicacao');
-		$indicacoes = $this->Indicacao->findAllByUsuarioId($this->Auth->user('id'));
+		$indicacoes = $this->Indicacao->findAllByUsuarioId($this->Auth->user('id'), array(), array(), array(), array(), -1);
 
 		// --- Envia para a view ---
 		$dados = array (

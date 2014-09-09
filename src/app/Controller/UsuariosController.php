@@ -112,6 +112,8 @@ class UsuariosController extends AppController {
 				return $this->redirect($this->referer());
 			} else {
 
+				$hash = sha1(date('dmYHisu'));
+
 				App::uses('CakeEmail', 'Network/Email');
 
 				$Email = new CakeEmail();
@@ -120,7 +122,7 @@ class UsuariosController extends AppController {
 				$Email->subject('Remédios - Solicitação de troca de senha.');
 				$texto = "Olá ". $usuario['Usuario']['nome'] ."\n\n";
 				$texto.= "Para cadastrar uma nova senha click no link abaixo:\n";
-				$texto.= Router::fullbaseUrl() . "/usuarios/novaSenha/". sha1(date('dmYHisu')) ."\n\n";
+				$texto.= Router::fullbaseUrl() . "/usuarios/novaSenha/". $hash ."\n\n";
 				$texto.="Mas se não tiver pedido para trocar de senha, é só ignorar este e-mail e continuar usando a sua senha atual.\n\n";
 				$texto.="Guilherme Jr.";
 				$Email->send($texto);
@@ -130,6 +132,11 @@ class UsuariosController extends AppController {
 			}
 
 		}
+
+	}
+
+	// --- novaSenha ----------------------------------------------------------
+	public function novaSenha($hash) {
 
 	}
 
