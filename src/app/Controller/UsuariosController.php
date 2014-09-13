@@ -124,7 +124,7 @@ class UsuariosController extends AppController {
 				$texto.= "Para cadastrar uma nova senha click no link abaixo:\n";
 				$texto.= Router::fullbaseUrl() . "/usuarios/novaSenha/". $hash ."\n\n";
 				$texto.="Mas se não tiver pedido para trocar de senha, é só ignorar este e-mail e continuar usando a sua senha atual.\n\n";
-				$texto.="Guilherme Jr.";
+				$texto.="Remédios - https://remedios.guilhermejr.net";
 				$Email->send($texto);
 
 				$this->Session->setFlash('Foi enviado um e-mail para <b>'. $usuario['Usuario']['email'] .'</b> com as instruções e o link para você trocar a senha.', 'default', array('class' => 'alert alert-success'));
