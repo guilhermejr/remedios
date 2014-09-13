@@ -72,8 +72,7 @@ class UsuariosController extends AppController {
 
 			// --- Atualiza a senha de acesso ---
 			if ($this->Usuario->save(array('id' => $this->Auth->user('id'), 'senha' => $dados['Usuario']['novaSenha']))) {
-				$this->Session->setFlash('Senha atualizada com sucesso.', 'default', array('class' => 'alert alert-danger'));
-				//return $this->redirect('/remedios/listar');
+				$this->Session->setFlash('Senha atualizada com sucesso.', 'default', array('class' => 'alert alert-success'));
 				return $this->redirect($this->referer());
 			} else {
 				$this->Session->setFlash('A Senha não pode ser atualizada.', 'default', array('class' => 'alert alert-danger'));
@@ -112,10 +111,28 @@ class UsuariosController extends AppController {
 				return $this->redirect($this->referer());
 			} else {
 
+				// --- Carrega o model Senha ---
+				$this->loadModel("Senha");
+				$senha = array();
+
+				// --- Gera o hash para trocar senha ---
 				$hash = sha1(date('dmYHisu'));
 
-				App::uses('CakeEmail', 'Network/Email');
+				// --- Verifica se já foi solicitado a troca da senha por esse usuário ---
+				$senhas = $this->Senha->findByUsuarioId($usuario['Usuario']['id']);
+				if (count($senhas)) {
 
+					$senha['Senha']['id'] = $senhas['Senha']['id'];
+
+				}
+
+				// --- Salva informação no banco de dados ---
+				$senha['Senha']['hash'] = $hash;
+				$senha['Senha']['usuario_id'] = $usuario['Usuario']['id'];
+				$this->Senha->save($senha);
+
+				// --- Envia email ---
+				App::uses('CakeEmail', 'Network/Email');
 				$Email = new CakeEmail();
 				$Email->from(array('remedios@guilhermejr.net' => 'Remédios'));
 				$Email->to($usuario['Usuario']['email']);
@@ -127,6 +144,7 @@ class UsuariosController extends AppController {
 				$texto.="Remédios - https://remedios.guilhermejr.net";
 				$Email->send($texto);
 
+				// --- Mensagem de confirmação ---
 				$this->Session->setFlash('Foi enviado um e-mail para <b>'. $usuario['Usuario']['email'] .'</b> com as instruções e o link para você trocar a senha.', 'default', array('class' => 'alert alert-success'));
 				return $this->redirect($this->referer());
 			}
@@ -137,6 +155,63 @@ class UsuariosController extends AppController {
 
 	// --- novaSenha ----------------------------------------------------------
 	public function novaSenha($hash) {
+
+		// --- Seta o layout dessa action ---
+		$this->layout = 'login';
+
+		// --- Carrega o model Senha ---
+		$this->loadModel("Senha");
+
+		// --- Checa se o hash é válido ---
+		$senhas = $this->Senha->findByHash($hash);
+		if (count($senhas)) {
+
+			// --- Se o formulário for submetido ---
+			if ($this->request->is('post') && !empty($this->request->data)) {
+
+				$dados = $this->request->data;
+
+				// --- Checa se os campos foram preenchidos ---
+				if (empty($dados['Usuario']['novaSenha']) || empty($dados['Usuario']['ConfirmarNovaSenha'])) {
+					$this->Session->setFlash('Todos os campos devem ser preenchidos.', 'default', array('class' => 'alert alert-danger'));
+					return $this->redirect($this->referer());
+				}
+
+				// --- Checa se as senhas são iguais ---
+				if ($dados['Usuario']['novaSenha'] != $dados['Usuario']['ConfirmarNovaSenha']) {
+					$this->Session->setFlash('A Senha e sua Confirmação devem ser iguais.', 'default', array('class' => 'alert alert-danger'));
+					return $this->redirect($this->referer());
+				}
+
+				// --- Checa se a senha tem pelo menos 6 caracteres ---
+				if (strlen($dados['Usuario']['novaSenha']) < 6) {
+					$this->Session->setFlash('A nova senha deve ter no mínimo 6 caracteres.', 'default', array('class' => 'alert alert-danger'));
+					return $this->redirect($this->referer());
+				}
+
+				// --- Atualiza a senha de acesso ---
+				if ($this->Usuario->save(array('id' => $senhas['Senha']['usuario_id'], 'senha' => $dados['Usuario']['novaSenha']))) {
+
+					// --- Apaga o registro que permite a troca da senha ---
+					$this->Senha->delete($senhas['Senha']['id']);
+
+					// --- Redireciona ---
+					$this->Session->setFlash('Senha atualizada com sucesso.', 'default', array('class' => 'alert alert-success'));
+					return $this->redirect('/usuarios/login');
+				} else {
+					$this->Session->setFlash('A Senha não pode ser atualizada.', 'default', array('class' => 'alert alert-danger'));
+					return $this->redirect($this->referer());
+				}
+
+			}
+
+
+		} else {
+
+			// --- Redireciona para a tela de login ---
+			return $this->redirect('/usuarios/login');
+
+		}
 
 	}
 

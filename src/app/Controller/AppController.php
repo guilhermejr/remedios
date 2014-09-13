@@ -75,7 +75,7 @@ class AppController extends Controller {
 		$this->Auth->authError = 'É necessário realizar a autenticação.';
 		$this->Auth->flash['params']['class'] = 'alert alert-danger';
 
-		// --- Libera acesso ao logout ---
-		$this->Auth->allow(array('logout', 'lembrar'));
+		// --- Libera acesso as actions abaixo ---
+		$this->Auth->allow(array('logout', 'lembrar', 'novaSenha', 'login'));
 	}
 }

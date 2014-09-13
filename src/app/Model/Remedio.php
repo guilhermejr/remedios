@@ -14,6 +14,5 @@ class Remedio extends AppModel {
 	public $useTable = 'remedios';
 	public $order = array('Remedio.validade' => 'ASC');
 	public $displayField = 'nome';
-	//public $actsAs = array('Containable');
 
 }
