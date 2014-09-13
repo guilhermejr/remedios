@@ -103,6 +103,16 @@ file { "/etc/apache2/sites-enabled/000-default":
 	require	=> Package["apache2"],
 }
 
+# Habilita conexões externas para o mysql
+file { "/etc/mysql/conf.d/allow_external.cnf":
+  owner		=> mysql,
+  group		=> mysql,
+  mode 		=> 0644,
+  content	=> "[mysqld]\n  bind-address = 0.0.0.0",
+  require	=> Package["mysql-server"],
+  notify	=> Service["mysql"],
+}
+
 # Configura o phpmyadmin
 exec { "confPhpmyadmin":
 	unless	=> "grep -c 'phpmyadmin' /etc/apache2/apache2.conf",
@@ -128,7 +138,7 @@ exec { "bancodedados":
 # Cria o usuário para o banco de dados criado no comando anterior
 exec { "criarUsuarioBancodedados":
 	unless	=> "mysql -u$usuarioBancodedados -p$senhaBancodedados $nomeBancodedados",
-	command	=> "mysql -uroot -p$senhaRootBancodedados -e \"GRANT ALL PRIVILEGES ON $nomeBancodedados.* TO '$usuarioBancodedados'@'localhost' IDENTIFIED BY '$senhaBancodedados';\"",
+	command	=> "mysql -uroot -p$senhaRootBancodedados -e \"GRANT ALL PRIVILEGES ON $nomeBancodedados.* TO '$usuarioBancodedados'@'%' IDENTIFIED BY '$senhaBancodedados';\"",
 	require	=> Exec["bancodedados"],
 }
 
