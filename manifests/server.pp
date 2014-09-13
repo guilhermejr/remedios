@@ -36,6 +36,12 @@ service { "apache2":
 	require		=> Package["apache2"],
 }
 
+# Adiciona o cake ao PATH
+exec { "cake":
+	unless	=> "grep -c 'PATH' /etc/bash.bashrc",
+	command	=> "echo 'export PATH=\"\$PATH:/var/www/app/Console\"' >> /etc/bash.bashrc",
+}
+
 # Apaga o arquivo de lock do apache para que seja possível trocar o usuário do apache
 exec { "apagarLockApache":
 	onlyif	=> "grep -c 'www-data' /etc/apache2/envvars",
