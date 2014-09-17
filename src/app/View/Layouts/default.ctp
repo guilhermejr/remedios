@@ -39,7 +39,7 @@
 				          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Novo <span class="caret"></span></a>
 				          <ul class="dropdown-menu" role="menu">
 				            <li><a href="#">Remédio</a></li>
-				            <li><a href="#">Indicação</a></li>
+				            <li><a href="/indicacoes">Indicação</a></li>
 				          </ul>
 				        </li>
 				        <li><a href="/remedios/buscar">Buscar</a></li>
