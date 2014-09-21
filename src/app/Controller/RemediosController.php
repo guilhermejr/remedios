@@ -128,6 +128,10 @@ class RemediosController extends AppController {
 				// --- Cria ou atualiza a indicação ---
 				if ($this->Remedio->save($dados)) {
 					$this->Session->setFlash($msg, 'default', array('class' => 'alert alert-success'));
+
+					// --- Nova quantidade de remédios ---
+					$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id')))));
+
 					return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 				} else {
 					$this->Session->setFlash('Erro.', 'default', array('class' => 'alert alert-danger'));
