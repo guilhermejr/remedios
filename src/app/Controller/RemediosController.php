@@ -111,7 +111,7 @@ class RemediosController extends AppController {
 			}
 
 			// --- formata data ---
-			$dados['Remedio']['validade'] = date_format(date_create_from_format('d/m/Y', $dados['Remedio']['validade']), 'Y-m-d');
+			$dados['Remedio']['validade'] = @date_format(date_create_from_format('d/m/Y', $dados['Remedio']['validade']), 'Y-m-d');
 			
 			// --- Se passou pela validação ---
 			if ($valida) {
