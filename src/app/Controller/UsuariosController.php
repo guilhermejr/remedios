@@ -24,7 +24,7 @@ class UsuariosController extends AppController {
 				$this->Usuario->save(array('ultimoAcesso' => date('Y-m-d H:i:s')));
 
 				// --- Redireciona para a tela principal ---
-				$this->redirect('/remedios/listar');
+				$this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 
 			} else {
 				$this->Session->setFlash('Inválida combinação de <br> E-mail e Senha!', 'default', array('class' => 'alert alert-danger'));
@@ -209,7 +209,7 @@ class UsuariosController extends AppController {
 		} else {
 
 			// --- Redireciona para a tela de login ---
-			return $this->redirect('/usuarios/login');
+			return $this->redirect(array('controller' => 'usuarios', 'action' => 'login'));
 
 		}
 

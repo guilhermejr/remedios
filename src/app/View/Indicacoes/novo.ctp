@@ -8,7 +8,7 @@
 <?php
 
 echo $this->Form->create('Indicacao', array('inputDefaults' => array('div' => false)));
-echo $this->Form->input('descricao', array('value' => $descricao, 'class' => 'form-control', 'label' => 'Descrição:', 'autofocus'));
+echo $this->Form->input('descricao', array('class' => 'form-control', 'label' => 'Descrição:', 'autofocus'));
 echo "<center>";
 echo $this->Html->link('Cancelar', array('controller' => 'indicacoes', 'action' => 'index'), array('class' => 'btn btn-default'));
 echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";

@@ -20,3 +20,5 @@
 		<?php } ?>
 	</tbody>
 </table>
+
+<center><?php echo $this->Html->link('Novo !', array('controller' => 'remedios', 'action' => 'novo'), array('class' => 'btn btn-primary')); ?></center>

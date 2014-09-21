@@ -31,28 +31,27 @@ class IndicacoesController extends AppController {
 		$indicacao = null;
 
 		// --- Se o formulário for submetido ---
-		if ($this->request->is('post') && !empty($this->request->data)) {
+		if ($this->request->is(array('post', 'put')) && !empty($this->request->data)) {
 
 			$dados = $this->request->data;
 
 			// --- Checa se os campos foram preenchidos ---
-			$descricao = $dados['Indicacao']['descricao'];
-			if (empty($descricao)) {
+			if (empty($dados['Indicacao']['descricao'])) {
 				$this->Session->setFlash('O campo deve ser preenchido.', 'default', array('class' => 'alert alert-danger'));
 				return $this->redirect($this->referer());
 			}
 
 			// --- Monta o vetor com as informações a serem persistidas ---
-			$indicacao = array('descricao' => $descricao, 'usuario_id' => $this->Auth->user('id'));
+			$dados['Indicacao']['usuario_id'] = $this->Auth->user('id');
 			if ($id) {
-				$indicacao['id'] = $id;
-				$msg = "A indicação <b>". $descricao ."</b> foi atualizada com sucesso.";
+				$dados['Indicacao']['id'] = $id;
+				$msg = "A indicação <b>". $dados['Indicacao']['descricao'] ."</b> foi atualizada com sucesso.";
 			} else {
-				$msg = "A indicação <b>". $descricao ."</b> foi cadastrada com sucesso.";
+				$msg = "A indicação <b>". $dados['Indicacao']['descricao'] ."</b> foi cadastrada com sucesso.";
 			}
 
 			// --- Cria ou atualiza a indicação ---
-			if ($this->Indicacao->save($indicacao)) {
+			if ($this->Indicacao->save($dados)) {
 				$this->Session->setFlash($msg, 'default', array('class' => 'alert alert-success'));
 				return $this->redirect(array('controller' => 'indicacoes', 'action' => 'index'));
 			} else {
@@ -62,15 +61,14 @@ class IndicacoesController extends AppController {
 
 		}
 
-		// --- Recupera o valor para preencher o imnput ---
+		// --- Recupera o valor para preencher o input ---
 		if ($id) {
 			$this->Indicacao->id = $id;
-			$indicacao = $this->Indicacao->read();
+			$this->request->data = $this->Indicacao->read();
 		}
 
 		// --- Envia para a view ---
 		$dados = array (
-			'descricao' => $indicacao['Indicacao']['descricao'],
 			'id' => $id,
 			'titulo' => 'Indicações'
 		);
@@ -91,7 +89,7 @@ class IndicacoesController extends AppController {
 			$this->Indicacao->id = $id;
 			$indicacao = $this->Indicacao->read();
 
-			// --- Apara a indicação e redireciona ---
+			// --- Apaga a indicação e redireciona ---
 			$this->Indicacao->delete($id);
 			$this->Session->setFlash('A indicação <b>'. $indicacao['Indicacao']['descricao'] .'</b> foi apagada com sucesso.', 'default', array('class' => 'alert alert-success'));
 			$this->redirect(array('controller' => 'indicacoes', 'action' => 'index'));

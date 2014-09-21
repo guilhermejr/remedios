@@ -12,6 +12,11 @@ p {
   	font-size: 16px;
 }
 
+.data {
+	width: 150px;
+	text-align: center;
+}
+
 .submit {
 	text-align: center;
 }
