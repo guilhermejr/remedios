@@ -44,6 +44,8 @@
 </p>
 
 <center>
+<?php echo $this->Html->link('Cancelar', 'javascript:window.history.back()', array('class' => 'btn btn-default')); ?>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php echo $this->Html->link('Editar', array('controller' => 'remedios', 'action' => 'novo', $id), array('class' => 'btn btn-default')); ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php echo $this->Html->link('Apagar', '#', array('class' => 'btn btn-danger', 'onclick' => 'apagar();')); ?>
