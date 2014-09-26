@@ -19,5 +19,5 @@
 	}
 
 	echo "<center>";
-	echo $this->Html->link('Cancelar', array('controller' => 'remedios', 'action' => 'buscar'), array('class' => 'btn btn-primary'));
+	echo $this->Html->link('Cancelar', array('controller' => 'remedios', 'action' => 'buscar'), array('class' => 'btn btn-default'));
 	echo "</center>";

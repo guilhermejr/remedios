@@ -7,6 +7,8 @@ echo $this->Form->input('posologia', array('class' => 'form-control', 'label' =>
 echo $this->Form->input('contraIndicacao', array('class' => 'form-control', 'label' => 'Contra-Indicação:'));
 echo $this->Form->input('validade', array('class' => 'form-control data', 'label' => 'Validade:', 'type' => 'text', 'id' => 'data'));
 echo "<center>";
+echo $this->Html->link('Cancelar', 'javascript:window.history.back()', array('class' => 'btn btn-default'));
+echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 echo $this->Html->link('OK !', '#', array('class' => 'btn btn-primary', 'onclick' => 'document.getElementById("RemedioNovoForm").submit(); return false;'));
 echo "</center>";
 echo $this->Form->end();
