@@ -153,7 +153,7 @@ class RemediosController extends AppController {
 		$this->loadModel('Indicacao');
 		$dados = array (
 			'titulo' => 'Remédios',
-			'indicacoes' => $this->Indicacao->find('list')
+			'indicacoes' => $this->Indicacao->find('list', array ('conditions' => array ('Indicacao.usuario_id' => $this->Auth->user('id'))))
 		);
 
 		$this->set($dados);
