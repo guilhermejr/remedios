@@ -3,6 +3,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
 	config.vm.box = "guilhermejr/debian7-64"
+	config.vm.box_url = "http://vagrant.guilhermejr.net/debian7-64.box"
 
 	config.vm.network "forwarded_port", guest: 80, host: 8080
 	config.vm.network "forwarded_port", guest: 443, host: 8443
