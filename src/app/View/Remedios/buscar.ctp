@@ -18,6 +18,11 @@
 	// --- Lista as Indicações ---
 	if (empty($checkbox)) {
 		echo"<table class=\"table table-striped\">";
+		echo"<thead>";
+		echo"	<tr>";
+		echo"	<th>Mensagem</th>";
+		echo"	</tr>";
+		echo"</thead>";
 		echo"	<tbody>";
 		echo"		<tr>";
 		echo"			<td>Nenhuma indicação encontrada.</td>";
