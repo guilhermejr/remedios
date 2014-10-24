@@ -13,7 +13,7 @@
 		<?php } ?>
 		<?php } else { ?>
 		<tr>
-			<td>Nenhuma indicação encontrado.</td>
+			<td>Nenhuma indicação encontrada.</td>
 		</tr>
 		<?php } ?>
 	</tbody>
