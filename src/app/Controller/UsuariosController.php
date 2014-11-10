@@ -216,15 +216,45 @@ class UsuariosController extends AppController {
 	}
 
 	// --- adicionar ----------------------------------------------------------
-	public function adicionar() {
+	public function novo() {
+
+		// --- Seta o layout dessa action ---
+		$this->layout = 'login';
 		
-		$isPost = $this->request->is('post');
-		
-		if ($isPost && !empty($this->request->data)) {
+		if ($this->request->is('post') && !empty($this->request->data)) {
+
+			$dados = $this->request->data;
+
+			// --- Checa se os campos foram preenchidos ---
+			if (empty($dados['Usuario']['nome']) || empty($dados['Usuario']['email']) || empty($dados['Usuario']['senha']) || empty($dados['Usuario']['confirmarSenha'])) {
+				$this->Session->setFlash('Todos os campos devem ser preenchidos.', 'default', array('class' => 'alert alert-danger'));
+				return $this->redirect($this->referer());
+			}
+
+			// --- Checa se as senhas são iguais ---
+			if ($dados['Usuario']['senha'] != $dados['Usuario']['confirmarSenha']) {
+				$this->Session->setFlash('A Senha e sua Confirmação devem ser iguais.', 'default', array('class' => 'alert alert-danger'));
+				return $this->redirect($this->referer());
+			}
+
+			// --- Checa se a senha tem pelo menos 6 caracteres ---
+			if (strlen($dados['Usuario']['senha']) < 6) {
+				$this->Session->setFlash('A nova senha deve ter no mínimo 6 caracteres.', 'default', array('class' => 'alert alert-danger'));
+				return $this->redirect($this->referer());
+			}
+
+			// --- Checa se o e-mail já foi cadastrado ---
+			if ($this->Usuario->find('count', array('conditions' => array('Usuario.email' => $dados['Usuario']['email'])))) {
+				$this->Session->setFlash('O e-mail<br> <b>'. $dados['Usuario']['email'] .'</b> <br> já está cadastrado.', 'default', array('class' => 'alert alert-danger'));
+				return $this->redirect($this->referer());
+			}
 
 			if ($this->Usuario->save($this->request->data)) {
-				//$this->redirect($this->referer());
-			} 
+				
+				// --- Redireciona para a tela de login ---
+				return $this->redirect(array('controller' => 'usuarios', 'action' => 'login'));
+
+			}
 		}
 	}
 
