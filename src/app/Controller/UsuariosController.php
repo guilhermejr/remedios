@@ -255,7 +255,7 @@ class UsuariosController extends AppController {
 				$Email = new CakeEmail();
 				$Email->from(array('remedios@guilhermejr.net' => 'Remédios'));
 				$Email->to($dados['Usuario']['email']);
-				$Email->subject('Remédios - Solicitação de troca de senha.');
+				$Email->subject('Remédios - Novo usuário.');
 				$texto = "Olá ". $dados['Usuario']['nome'] ."\n\n";
 				$texto.= "Obrigado por ter se cadastrado. A partir de agora você pode acessar o sistema.\n\n";
 				$texto.="Remédios - https://remedios.guilhermejr.net";
