@@ -2,7 +2,6 @@
 
 class UsuariosController extends AppController {
 
-	public $scaffold;
 	public $uses = 'Usuario';
 	public $name = 'Usuarios';
 
@@ -250,6 +249,17 @@ class UsuariosController extends AppController {
 			}
 
 			if ($this->Usuario->save($this->request->data)) {
+
+				// --- Envia email ---
+				App::uses('CakeEmail', 'Network/Email');
+				$Email = new CakeEmail();
+				$Email->from(array('remedios@guilhermejr.net' => 'Remédios'));
+				$Email->to($dados['Usuario']['email']);
+				$Email->subject('Remédios - Solicitação de troca de senha.');
+				$texto = "Olá ". $dados['Usuario']['nome'] ."\n\n";
+				$texto.= "Obrigado por ter se cadastrado. A partir de agora você pode acessar o sistema.\n\n";
+				$texto.="Remédios - https://remedios.guilhermejr.net";
+				$Email->send($texto);
 				
 				// --- Redireciona para a tela de login ---
 				return $this->redirect(array('controller' => 'usuarios', 'action' => 'login'));
