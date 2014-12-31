@@ -248,24 +248,66 @@ class UsuariosController extends AppController {
 				return $this->redirect($this->referer());
 			}
 
+			// --- Salva os dados do usuário ---
 			if ($this->Usuario->save($this->request->data)) {
 
-				// --- Envia email ---
-				App::uses('CakeEmail', 'Network/Email');
-				$Email = new CakeEmail();
-				$Email->from(array('remedios@guilhermejr.net' => 'Remédios'));
-				$Email->to($dados['Usuario']['email']);
-				$Email->subject('Remédios - Novo usuário.');
-				$texto = "Olá ". $dados['Usuario']['nome'] ."\n\n";
-				$texto.= "Obrigado por ter se cadastrado. A partir de agora você pode acessar o sistema.\n\n";
-				$texto.="Remédios - https://remedios.guilhermejr.net";
-				$Email->send($texto);
-				
-				// --- Redireciona para a tela de login ---
-				return $this->redirect(array('controller' => 'usuarios', 'action' => 'login'));
+				// --- Salva opções default ---
+				$this->request->data['Configuracao']['id'] = $this->Usuario->id;
+				$this->request->data['Configuracao']['usuario_id'] = $this->Usuario->id;
+				if ($this->Usuario->Configuracao->save($this->request->data)) {
 
+					// --- Envia email ---
+					App::uses('CakeEmail', 'Network/Email');
+					$Email = new CakeEmail();
+					$Email->from(array('remedios@guilhermejr.net' => 'Remédios'));
+					$Email->to($dados['Usuario']['email']);
+					$Email->subject('Remédios - Novo usuário.');
+					$texto = "Olá ". $dados['Usuario']['nome'] ."\n\n";
+					$texto.= "Obrigado por ter se cadastrado. A partir de agora você pode acessar o sistema.\n\n";
+					$texto.="Remédios - https://remedios.guilhermejr.net";
+					$Email->send($texto);
+				
+					// --- Redireciona para a tela de login ---
+					return $this->redirect(array('controller' => 'usuarios', 'action' => 'login'));
+
+				}
 			}
 		}
+	}
+
+	// --- configuracoes ------------------------------------------------------
+	public function configuracoes() {
+
+		if ($this->request->is('put') && !empty($this->request->data)) {
+
+			$dados = $this->request->data;
+
+			// --- Checa se os campos foram preenchidos ---
+			if (empty($dados['Configuracao']['dias']) || empty($dados['Configuracao']['periodicidade'])) {
+				$this->Session->setFlash('Todos os campos devem ser preenchidos.', 'default', array('class' => 'alert alert-danger'));
+				return $this->redirect($this->referer());
+			}
+
+			// --- Atualiza as configurações ---
+			$this->request->data['Configuracao']['id'] = $this->Auth->user('id');
+			$this->request->data['Configuracao']['usuario_id'] = $this->Auth->user('id');
+			if ($this->Usuario->Configuracao->save($this->request->data)) {
+
+				// --- Redireciona ---
+				$this->Session->setFlash('Configurações atualizadas com sucesso.', 'default', array('class' => 'alert alert-success'));
+				return $this->redirect('/usuarios/configuracoes');
+		
+			}
+		}
+
+		// --- Recupera as informações ---
+		$this->Usuario->Configuracao->id = $this->Auth->user('id');
+		$configuracao = $this->Usuario->Configuracao->read();
+		$this->request->data = $configuracao;
+
+		// --- Título da página ---
+		$this->set('titulo', 'Configurações');
+
 	}
 
 }
