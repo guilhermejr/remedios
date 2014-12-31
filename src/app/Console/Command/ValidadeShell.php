@@ -66,7 +66,6 @@ class ValidadeShell extends AppShell {
 					}
 
 					$texto.= "</table>";
-
 					$texto.= "<br><br>";
 					$texto.="Remédios - https://remedios.guilhermejr.net";
 					$Email->send($texto);
@@ -124,7 +123,6 @@ class ValidadeShell extends AppShell {
 					}
 
 					$texto.= "</table>";
-
 					$texto.= "<br><br>";
 					$texto.="Remédios - https://remedios.guilhermejr.net";
 					$Email->send($texto);
