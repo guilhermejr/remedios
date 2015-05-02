@@ -464,8 +464,7 @@ class CakeResponse {
 		);
 
 		$charset = false;
-		if (
-			$this->_charset &&
+		if ($this->_charset &&
 			(strpos($this->_contentType, 'text/') === 0 || in_array($this->_contentType, $whitelist))
 		) {
 			$charset = true;
@@ -514,17 +513,20 @@ class CakeResponse {
 /**
  * Sends a header to the client.
  *
+ * Will skip sending headers if headers have already been sent.
+ *
  * @param string $name the header name
  * @param string $value the header value
  * @return void
  */
 	protected function _sendHeader($name, $value = null) {
-		if (!headers_sent()) {
-			if ($value === null) {
-				header($name);
-			} else {
-				header("{$name}: {$value}");
-			}
+		if (headers_sent($filename, $linenum)) {
+			return;
+		}
+		if ($value === null) {
+			header($name);
+		} else {
+			header("{$name}: {$value}");
 		}
 	}
 
@@ -597,6 +599,7 @@ class CakeResponse {
 			return isset($headers['Location']) ? $headers['Location'] : null;
 		}
 		$this->header('Location', $url);
+		return null;
 	}
 
 /**
@@ -950,7 +953,7 @@ class CakeResponse {
 	}
 
 /**
- * Sets the Last-Modified header for the response by taking an modification time
+ * Sets the Last-Modified header for the response by taking a modification time
  * If called with no parameters it will return the current Last-Modified value
  *
  * ## Examples:
@@ -1003,7 +1006,7 @@ class CakeResponse {
  * parameters are passed, then an array with the current Vary header
  * value is returned
  *
- * @param string|array $cacheVariances a single Vary string or a array
+ * @param string|array $cacheVariances a single Vary string or an array
  *   containing the list for variances.
  * @return array
  */
@@ -1135,7 +1138,7 @@ class CakeResponse {
 /**
  * Checks whether a response has not been modified according to the 'If-None-Match'
  * (Etags) and 'If-Modified-Since' (last modification date) request
- * headers headers. If the response is detected to be not modified, it
+ * headers. If the response is detected to be not modified, it
  * is marked as so accordingly so the client can be informed of that.
  *
  * In order to mark a response as not modified, you need to set at least
@@ -1333,7 +1336,7 @@ class CakeResponse {
 			'download' => null
 		);
 
-		if (strpos($path, '..') !== false) {
+		if (strpos($path, '..' . DS) !== false) {
 			throw new NotFoundException(__d(
 				'cake_dev',
 				'The requested file contains `..` and will not be read.'
@@ -1377,18 +1380,17 @@ class CakeResponse {
 				$name = $options['name'];
 			}
 			$this->download($name);
-			$this->header('Accept-Ranges', 'bytes');
 			$this->header('Content-Transfer-Encoding', 'binary');
+		}
 
-			$httpRange = env('HTTP_RANGE');
-			if (isset($httpRange)) {
-				$this->_fileRange($file, $httpRange);
-			} else {
-				$this->header('Content-Length', $fileSize);
-			}
+		$this->header('Accept-Ranges', 'bytes');
+		$httpRange = env('HTTP_RANGE');
+		if (isset($httpRange)) {
+			$this->_fileRange($file, $httpRange);
 		} else {
 			$this->header('Content-Length', $fileSize);
 		}
+
 		$this->_clearBuffer();
 		$this->_file = $file;
 	}
@@ -1506,7 +1508,9 @@ class CakeResponse {
 	protected function _flushBuffer() {
 		//@codingStandardsIgnoreStart
 		@flush();
-		@ob_flush();
+		if (ob_get_level()) {
+			@ob_flush();
+		}
 		//@codingStandardsIgnoreEnd
 	}
 

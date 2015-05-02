@@ -31,9 +31,9 @@ App::uses('LogEngineCollection', 'Log');
  * You can configure log adapters in your applications `bootstrap.php` file.
  * A sample configuration would look like:
  *
- * {{{
+ * ```
  * CakeLog::config('my_log', array('engine' => 'File'));
- * }}}
+ * ```
  *
  * See the documentation on CakeLog::config() for more detail.
  *
@@ -48,10 +48,10 @@ App::uses('LogEngineCollection', 'Log');
  * RFC 5424. When logging messages you can either use the named methods,
  * or the correct constants with `write()`:
  *
- * {{{
+ * ```
  * CakeLog::error('Something horrible happened');
  * CakeLog::write(LOG_ERR, 'Something horrible happened');
- * }}}
+ * ```
  *
  * If you require custom logging levels, you can use CakeLog::levels() to
  * append additional logging levels.
@@ -70,6 +70,7 @@ App::uses('LogEngineCollection', 'Log');
  * on scopes
  *
  * @package       Cake.Log
+ * @link http://book.cakephp.org/2.0/en/core-libraries/logging.html#logging
  */
 class CakeLog {
 
@@ -128,12 +129,12 @@ class CakeLog {
  *
  * ### Usage:
  *
- * {{{
+ * ```
  * CakeLog::config('second_file', array(
  *     'engine' => 'File',
  *     'path' => '/var/logs/my_app/'
  * ));
- * }}}
+ * ```
  *
  * Will configure a FileLog instance to use the specified path.
  * All options that are not `engine` are passed onto the logging adapter,
@@ -145,13 +146,13 @@ class CakeLog {
  * When configuring loggers, you can set which levels a logger will handle.
  * This allows you to disable debug messages in production for example:
  *
- * {{{
+ * ```
  * CakeLog::config('default', array(
  *     'engine' => 'File',
  *     'path' => LOGS,
  *     'levels' => array('error', 'critical', 'alert', 'emergency')
  * ));
- * }}}
+ * ```
  *
  * The above logger would only log error messages or higher. Any
  * other log messages would be discarded.
@@ -163,13 +164,13 @@ class CakeLog {
  * logger. If you don't define any scopes an adapter will catch
  * all scopes that match the handled levels.
  *
- * {{{
+ * ```
  * CakeLog::config('payments', array(
  *     'engine' => 'File',
  *     'types' => array('info', 'error', 'warning'),
  *     'scopes' => array('payment', 'order')
  * ));
- * }}}
+ * ```
  *
  * The above logger will only capture log entries made in the
  * `payment` and `order` scopes. All other scopes including the
@@ -183,6 +184,7 @@ class CakeLog {
  * @param array $config Array of configuration information for the logger
  * @return bool success of configuration.
  * @throws CakeLogException
+ * @link http://book.cakephp.org/2.0/en/core-libraries/logging.html#creating-and-configuring-log-streams
  */
 	public static function config($key, $config) {
 		if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $key)) {
@@ -218,15 +220,15 @@ class CakeLog {
  *
  * To append additional level 'user0' and 'user1' to to default log levels:
  *
- * {{{
+ * ```
  * CakeLog::levels(array('user0, 'user1'));
  * // or
  * CakeLog::levels(array('user0, 'user1'), true);
- * }}}
+ * ```
  *
  * will result in:
  *
- * {{{
+ * ```
  * array(
  *     0 => 'emergency',
  *     1 => 'alert',
@@ -234,23 +236,23 @@ class CakeLog {
  *     8 => 'user0',
  *     9 => 'user1',
  * );
- * }}}
+ * ```
  *
  * To set/replace existing configuration, pass an array with the second argument
  * set to false.
  *
- * {{{
+ * ```
  * CakeLog::levels(array('user0, 'user1'), false);
- * }}}
+ * ```
  *
  * will result in:
  *
- * {{{
+ * ```
  * array(
  *      0 => 'user0',
  *      1 => 'user1',
  * );
- * }}}
+ * ```
  *
  * @param array $levels array
  * @param bool $append true to append, false to replace
@@ -398,6 +400,7 @@ class CakeLog {
  * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return bool Success
+ * @link http://book.cakephp.org/2.0/en/core-libraries/logging.html#writing-to-logs
  */
 	public static function write($type, $message, $scope = array()) {
 		if (empty(self::$_Collection)) {

@@ -732,8 +732,14 @@ class ModifiedAttachment extends CakeTestModel {
  * @return void
  */
 	public function afterFind($results, $primary = false) {
-		if (isset($results['id'])) {
-			$results['callback'] = 'Fired';
+		if ($this->useConsistentAfterFind) {
+			if (isset($results[0][$this->alias]['id'])) {
+				$results[0][$this->alias]['callback'] = 'Fired';
+			}
+		} else {
+			if (isset($results['id'])) {
+				$results['callback'] = 'Fired';
+			}
 		}
 		return $results;
 	}
@@ -5040,5 +5046,36 @@ class CustomArticle extends AppModel {
 			$this->findMethods['unPublished'] = 'true again';
 		}
 	}
+
+}
+
+/**
+ * Example class
+ *
+ * @package       Cake.Test.Case.Model
+ */
+class Example extends AppModel {
+
+/**
+ * useTable property
+ *
+ * @var string
+ */
+	public $useTable = false;
+
+/**
+ * schema property
+ *
+ * @var array
+ */
+	protected $_schema = array(
+		'filefield' => array(
+			'type' => 'string',
+			'length' => 254,
+			'default' => null,
+			'null' => true,
+			'comment' => null
+		),
+	);
 
 }

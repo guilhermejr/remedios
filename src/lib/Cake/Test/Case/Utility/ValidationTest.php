@@ -203,17 +203,17 @@ class ValidationTest extends CakeTestCase {
 	}
 
 /**
- * testBetween method
+ * testLengthBetween method
  *
  * @return void
  */
-	public function testBetween() {
-		$this->assertTrue(Validation::between('abcdefg', 1, 7));
-		$this->assertTrue(Validation::between('', 0, 7));
-		$this->assertTrue(Validation::between('אกあアꀀ豈', 1, 7));
+	public function testLengthBetween() {
+		$this->assertTrue(Validation::lengthBetween('abcdefg', 1, 7));
+		$this->assertTrue(Validation::lengthBetween('', 0, 7));
+		$this->assertTrue(Validation::lengthBetween('אกあアꀀ豈', 1, 7));
 
-		$this->assertFalse(Validation::between('abcdefg', 1, 6));
-		$this->assertFalse(Validation::between('ÆΔΩЖÇ', 1, 3));
+		$this->assertFalse(Validation::lengthBetween('abcdefg', 1, 6));
+		$this->assertFalse(Validation::lengthBetween('ÆΔΩЖÇ', 1, 3));
 	}
 
 /**
@@ -1462,10 +1462,11 @@ class ValidationTest extends CakeTestCase {
 		$this->assertTrue(Validation::date('2008', array('y')));
 		$this->assertTrue(Validation::date('2013', array('y')));
 		$this->assertTrue(Validation::date('2104', array('y')));
+		$this->assertTrue(Validation::date('1899', array('y')));
 		$this->assertFalse(Validation::date('20009', array('y')));
 		$this->assertFalse(Validation::date(' 2012', array('y')));
 		$this->assertFalse(Validation::date('3000', array('y')));
-		$this->assertFalse(Validation::date('1899', array('y')));
+		$this->assertFalse(Validation::date('1799', array('y')));
 	}
 
 /**
