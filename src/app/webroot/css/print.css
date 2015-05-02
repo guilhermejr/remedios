@@ -1,0 +1,26 @@
+* {
+	background: transparent !important;
+	color: #000 !important;
+	text-shadow: none !important;
+	filter: none !important;
+	-ms-filter: none !important;
+}
+ 
+body {
+	margin: 0;
+	padding: 0;
+	line-height: 1.4em;
+	font: 12pt Georgia, "Times New Roman", Times, serif;
+}
+
+nav, footer, video, audio, object, embed { 
+	display: none; 
+}
+
+.btn {
+	display: none;
+}
+
+.panel {
+	border: 0;
+}

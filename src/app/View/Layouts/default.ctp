@@ -8,6 +8,7 @@
 			echo $this->Html->css(array('bootstrap.min.css', 'bootstrap-theme.min.css', 'jquery-ui.css', 'estilo.css'));
 			echo $this->Html->script(array('jquery.js', 'bootstrap.min.js', 'jquery-ui.js', 'jquery.ui.datepicker-pt-BR.js'));
 		?>
+		<link rel="stylesheet" type="text/css" href="/css/print.css" media="print" />
 		<script>
 			function logout() {
 				if(confirm('Deseja realmente sair do sistema?')) {
@@ -42,6 +43,7 @@
 				        <li class="dropdown">
 				          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo AuthComponent::user('nome'); ?> <span class="caret"></span></a>
 				          <ul class="dropdown-menu" role="menu">
+				            <li><a href="/usuarios/compras">Lista de Compras</a></li>
 				            <li><a href="/usuarios/configuracoes">Configurações</a></li>
 				            <li><a href="/usuarios/trocarSenha">Trocar Senha</a></li>
 				            <li><a href="#" onclick="logout();">Sair</a></li>

@@ -159,7 +159,7 @@ class UsuariosController extends AppController {
 		$this->layout = 'login';
 
 		// --- Carrega o model Senha ---
-		$this->loadModel("Senha");
+		$this->loadModel('Senha');
 
 		// --- Checa se o hash é válido ---
 		$senhas = $this->Senha->findByHash($hash);
@@ -308,6 +308,21 @@ class UsuariosController extends AppController {
 		// --- Título da página ---
 		$this->set('titulo', 'Configurações');
 
+	}
+
+	// --- compras ------------------------------------------------------------
+	public function compras() {
+
+		// --- Seleciona remédios ---
+		$this->loadModel('Remedio');
+		$remedios = $this->Remedio->find('all', array('recursive' => -1, 'conditions' => array('validade <=' => date('Y-m-d'), 'usuario_id' => $this->Auth->user('id'))));
+
+		// --- Envia para a view ---
+		$dados = array (
+			'remedios' => $remedios,
+			'titulo' => 'Lista de Compras'
+		);
+		$this->set($dados);
 	}
 
 }
