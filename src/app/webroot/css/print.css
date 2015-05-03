@@ -10,7 +10,7 @@ body {
 	margin: 0;
 	padding: 0;
 	line-height: 1.4em;
-	font: 12pt Georgia, "Times New Roman", Times, serif;
+	font: 16pt Georgia, "Times New Roman", Times, serif;
 }
 
 nav, footer, video, audio, object, embed { 
@@ -24,3 +24,7 @@ nav, footer, video, audio, object, embed {
 .panel {
 	border: 0;
 }
+
+.content a[href]:after { 
+	display:none; 
+} 

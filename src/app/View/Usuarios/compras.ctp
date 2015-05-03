@@ -8,7 +8,9 @@
 		<?php if (count($remedios)) { ?>
 		<?php foreach ($remedios as $remedio) { ?>
 		<tr>
-			<td><?php echo $remedio['Remedio']['nome']; ?></td>
+			<td>
+				<?php echo $this->Html->link($remedio['Remedio']['nome'], array('controller' => 'remedios', 'action' => 'ver', $remedio['Remedio']['id'])); ?>
+			</td>
 		</tr>
 		<?php } ?>
 		<?php } else { ?>
