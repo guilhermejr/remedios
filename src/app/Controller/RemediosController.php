@@ -9,7 +9,7 @@ class RemediosController extends AppController {
 
 		// --- Parâmetros da busca ---
 		$params = array (
-			'conditions' => array ('Remedio.usuario_id' => $this->Auth->user('id'))
+			'conditions' => array ('Remedio.usuario_id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d'))
 		);
 
 		// --- Realiza a busca ---
@@ -129,7 +129,7 @@ class RemediosController extends AppController {
 					$this->Session->setFlash($msg, 'default', array('class' => 'alert alert-success'));
 
 					// --- Nova quantidade de remédios ---
-					$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id')))));
+					$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d')))));
 
 					return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 				} else {
