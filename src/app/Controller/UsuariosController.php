@@ -17,6 +17,7 @@ class UsuariosController extends AppController {
 				// --- Carrega modelo Remedio ----
 				$this->loadModel('Remedio');
 				$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d')))));
+				$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade <=' => date('Y-m-d')))));
 
 				// --- Atualiza a data e hora do ultimo acesso ---
 				$this->Usuario->id = $this->Auth->user('id');

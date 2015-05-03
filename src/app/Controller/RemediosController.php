@@ -73,8 +73,10 @@ class RemediosController extends AppController {
 			// --- Busca os remédios com as indicações escolhidas ---
 			$remedios = $this->Remedio->Indicacao->find('all', array(
 					'conditions' => array(
-						'Indicacao.id' => $dados['Remedio']['Indicacao']
-					)				)
+						'Indicacao.id' => $dados['Remedio']['Indicacao']//,
+						//'Remedio.validade >' => date('Y-m-d')
+						)				
+					)
 			);
 
 			// --- Envia para a view ---
@@ -130,6 +132,7 @@ class RemediosController extends AppController {
 
 					// --- Nova quantidade de remédios ---
 					$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d')))));
+					$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade <=' => date('Y-m-d')))));
 
 					return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 				} else {
