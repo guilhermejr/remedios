@@ -10,6 +10,12 @@
 			window.location.href='/remedios/apagar/<?php echo $id; ?>'
 		}
 	}
+
+	function acabou() {
+		if(confirm('Deseja realmente informar que o remédio <?php echo $nome; ?> acabou?')) {
+			window.location.href='/remedios/acabou/<?php echo $id; ?>'
+		}
+	}
 </script>
 
 <p>
@@ -49,4 +55,8 @@
 <?php echo $this->Html->link('Editar', array('controller' => 'remedios', 'action' => 'novo', $id), array('class' => 'btn btn-default')); ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php echo $this->Html->link('Apagar', '#', array('class' => 'btn btn-danger', 'onclick' => 'apagar();')); ?>
+<?php if (!$acabou) { ?>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<?php echo $this->Html->link('Acabou', '#', array('class' => 'btn btn-warning', 'onclick' => 'acabou();')); ?>
+<?php } ?>
 </center>
