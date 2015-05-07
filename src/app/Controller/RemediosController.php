@@ -74,8 +74,7 @@ class RemediosController extends AppController {
 			// --- Busca os remédios com as indicações escolhidas ---
 			$remedios = $this->Remedio->Indicacao->find('all', array(
 					'conditions' => array(
-						'Indicacao.id' => $dados['Remedio']['Indicacao']//,
-						//'Remedio.validade >' => date('Y-m-d')
+						'Indicacao.id' => $dados['Remedio']['Indicacao'],
 						)				
 					)
 			);
@@ -86,7 +85,6 @@ class RemediosController extends AppController {
 				'titulo' => 'Resultado da busca'
 			);
 			$this->set($dados);
-
 			
 		} else {
 

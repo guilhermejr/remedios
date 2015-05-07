@@ -7,7 +7,14 @@
 		if (count($indicacao['Remedio'])) {
 			echo "<ul>";
 			foreach ($indicacao['Remedio'] as $remedio) {
-				echo "<li>" . $this->Html->link($remedio['nome'], array('controller' => 'remedios', 'action' => 'ver', $remedio['id'])) . "</li>";
+				$hoje = new DateTime(date('Y-m-d'));
+				$validade = new DateTime($remedio['validade']);
+				if ($hoje > $validade) {
+					echo "<li><strike>" . $this->Html->link($remedio['nome'], array('controller' => 'remedios', 'action' => 'ver', $remedio['id'])) . "</strike></li>";
+				} else {
+					echo "<li>" . $this->Html->link($remedio['nome'], array('controller' => 'remedios', 'action' => 'ver', $remedio['id'])) . "</li>";
+				}
+				
 			}
 			echo "</ul>";
 		} else {
