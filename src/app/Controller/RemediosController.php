@@ -27,9 +27,9 @@ class RemediosController extends AppController {
 	// --- ver ----------------------------------------------------------------
 	public function ver($id, $acabou = false) {
 
-		// --- Verifica se o remédio existe ---
+		// --- Verifica se o remédio existe e se pertence ao usuário ---
 		$this->Remedio->id = $id;
-		if (!$this->Remedio->exists()) {
+		if (!$this->Remedio->exists() || !$this->Remedio->find('count', array('conditions' => array('Remedio.id' => $id, 'Remedio.usuario_id' => $this->Auth->user('id'))))) {
 			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 		}
 
@@ -164,9 +164,9 @@ class RemediosController extends AppController {
 	// --- apagar -------------------------------------------------------------
 	public function apagar($id) {
 
-		// --- Checa se o id existe ---
+		// --- Checa se o id existe e se pertence ao usuário ---
 		$this->Remedio->id = $id;
-		if (!$this->Remedio->exists()) {
+		if (!$this->Remedio->exists() || !$this->Remedio->find('count', array('conditions' => array('Remedio.id' => $id, 'Remedio.usuario_id' => $this->Auth->user('id'))))) {
 			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 		} else {
 			// --- Recupera o nome do remédio ---
@@ -190,9 +190,9 @@ class RemediosController extends AppController {
 	// --- acabou -------------------------------------------------------------
 	public function acabou($id) {
 
-		// --- Checa se o id existe ---
+		// --- Checa se o id existe e se pertence ao usuário ---
 		$this->Remedio->id = $id;
-		if (!$this->Remedio->exists()) {
+		if (!$this->Remedio->exists() || !$this->Remedio->find('count', array('conditions' => array('Remedio.id' => $id, 'Remedio.usuario_id' => $this->Auth->user('id'))))) {
 			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 		} else {
 			// --- Recupera o nome do remédio ---
