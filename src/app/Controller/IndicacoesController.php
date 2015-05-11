@@ -70,6 +70,7 @@ class IndicacoesController extends AppController {
 		// --- Envia para a view ---
 		$dados = array (
 			'id' => $id,
+			'descricao' => $this->request->data['Indicacao']['descricao'],
 			'titulo' => 'Indicações'
 		);
 
@@ -80,9 +81,9 @@ class IndicacoesController extends AppController {
 	// --- apagar -------------------------------------------------------------
 	public function apagar($id) {
 
-		// --- Checa se o id existe ---
+		// --- Checa se o id existe e se pertence ao usuário ---
 		$this->Indicacao->id = $id;
-		if (!$this->Indicacao->exists()) {
+		if (!$this->Indicacao->exists() || !$this->Indicacao->find('count', array('conditions' => array('Indicacao.id' => $id, 'Indicacao.usuario_id' => $this->Auth->user('id'))))) {
 			return $this->redirect(array('controller' => 'indicacoes', 'action' => 'index'));
 		} else {
 			// --- Recupera a descrição da indicação ---
