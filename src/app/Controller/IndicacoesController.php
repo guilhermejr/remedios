@@ -9,7 +9,8 @@ class IndicacoesController extends AppController {
 
 		// --- Parâmetros da busca ---
 		$params = array (
-			'conditions' => array ('Indicacao.usuario_id' => $this->Auth->user('id'))
+			'conditions' => array ('Indicacao.usuario_id' => $this->Auth->user('id')),
+			'recursive' => -1
 		);
 
 		// --- Realiza a busca ---

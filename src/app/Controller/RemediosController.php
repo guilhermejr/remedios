@@ -9,7 +9,8 @@ class RemediosController extends AppController {
 
 		// --- Parâmetros da busca ---
 		$params = array (
-			'conditions' => array ('Remedio.usuario_id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d'))
+			'conditions' => array ('Remedio.usuario_id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d')),
+			'recursive' => -1
 		);
 
 		// --- Realiza a busca ---
