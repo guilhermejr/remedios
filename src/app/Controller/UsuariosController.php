@@ -316,7 +316,7 @@ class UsuariosController extends AppController {
 
 		// --- Seleciona remédios ---
 		$this->loadModel('Remedio');
-		$remedios = $this->Remedio->find('all', array('recursive' => -1, 'conditions' => array('validade <=' => date('Y-m-d'), 'usuario_id' => $this->Auth->user('id'))));
+		$remedios = $this->Remedio->find('all', array('order' => array('Remedio.nome' => 'ASC'), 'recursive' => -1, 'conditions' => array('validade <=' => date('Y-m-d'), 'usuario_id' => $this->Auth->user('id'))));
 
 		// --- Envia para a view ---
 		$dados = array (
