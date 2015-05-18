@@ -62,18 +62,18 @@ class IndicacoesController extends AppController {
 
 		}
 
+		$dados = array();
+
 		// --- Recupera o valor para preencher o input ---
 		if ($id) {
 			$this->Indicacao->id = $id;
 			$this->request->data = $this->Indicacao->read();
+			$dados['descricao'] = $this->request->data['Indicacao']['descricao'];
 		}
 
 		// --- Envia para a view ---
-		$dados = array (
-			'id' => $id,
-			'descricao' => $this->request->data['Indicacao']['descricao'],
-			'titulo' => 'Indicações'
-		);
+		$dados['id'] = $id;
+		$dados['titulo'] = 'Indicações';
 
 		$this->set($dados);
 
