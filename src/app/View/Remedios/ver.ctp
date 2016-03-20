@@ -16,6 +16,12 @@
 			window.location.href='/remedios/acabou/<?php echo $id; ?>'
 		}
 	}
+
+	function menos1() {
+		if(confirm('Deseja realmente retirar 1 do estoque?')) {
+			window.location.href='/remedios/menos1/<?php echo $id; ?>'
+		}
+	}
 </script>
 
 <p>
@@ -45,6 +51,11 @@
 </p>
 
 <p>
+	<b>Quantidade: </b><br>
+	<?php echo $remedio['Remedio']['qtd']; ?>
+</p>
+
+<p>
 	<b>Validade:</b><br>
 	<?php echo $this->Time->format($remedio['Remedio']['validade'], '%d/%m/%Y'); ?> <small>(<?php echo $this->Time->timeAgoInWords($remedio['Remedio']['validade'], array('format' => 'd/m/Y', 'end' => '+10 year')); ?>)</small>
 </p>
@@ -56,6 +67,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php echo $this->Html->link('Apagar', '#', array('class' => 'btn btn-danger', 'onclick' => 'apagar();')); ?>
 <?php if (!$acabou) { ?>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<?php echo $this->Html->link('-1', '#', array('class' => 'btn btn-info', 'onclick' => 'menos1();')); ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php echo $this->Html->link('Acabou', '#', array('class' => 'btn btn-warning', 'onclick' => 'acabou();')); ?>
 <?php } ?>

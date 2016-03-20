@@ -10,14 +10,14 @@ class UsuariosController extends AppController {
 
 		// --- Seta o layout dessa action ---
 		$this->layout = 'login';
-		
+
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 
 				// --- Carrega modelo Remedio ----
 				$this->loadModel('Remedio');
-				$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d')))));
-				$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade <=' => date('Y-m-d')))));
+				$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd >' => 0))));
+				$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd' => 0))));
 
 				// --- Atualiza a data e hora do ultimo acesso ---
 				$this->Usuario->id = $this->Auth->user('id');
@@ -220,7 +220,7 @@ class UsuariosController extends AppController {
 
 		// --- Seta o layout dessa action ---
 		$this->layout = 'login';
-		
+
 		if ($this->request->is('post') && !empty($this->request->data)) {
 
 			$dados = $this->request->data;
@@ -267,7 +267,7 @@ class UsuariosController extends AppController {
 					$texto.= "Obrigado por ter se cadastrado. A partir de agora você pode acessar o sistema.\n\n";
 					$texto.="Remédios - https://remedios.guilhermejr.net";
 					$Email->send($texto);
-				
+
 					// --- Redireciona para a tela de login ---
 					return $this->redirect(array('controller' => 'usuarios', 'action' => 'login'));
 
@@ -297,7 +297,7 @@ class UsuariosController extends AppController {
 				// --- Redireciona ---
 				$this->Session->setFlash('Configurações atualizadas com sucesso.', 'default', array('class' => 'alert alert-success'));
 				return $this->redirect('/usuarios/configuracoes');
-		
+
 			}
 		}
 
@@ -316,7 +316,7 @@ class UsuariosController extends AppController {
 
 		// --- Seleciona remédios ---
 		$this->loadModel('Remedio');
-		$remedios = $this->Remedio->find('all', array('order' => array('Remedio.nome' => 'ASC'), 'recursive' => -1, 'conditions' => array('validade <=' => date('Y-m-d'), 'usuario_id' => $this->Auth->user('id'))));
+		$remedios = $this->Remedio->find('all', array('order' => array('Remedio.nome' => 'ASC'), 'recursive' => -1, 'conditions' => array('qtd' => 0, 'usuario_id' => $this->Auth->user('id'))));
 
 		// --- Envia para a view ---
 		$dados = array (

@@ -9,13 +9,13 @@ class RemediosController extends AppController {
 
 		// --- Parâmetros da busca ---
 		$params = array (
-			'conditions' => array ('Remedio.usuario_id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d')),
+			'conditions' => array ('Remedio.usuario_id' => $this->Auth->user('id'), 'Remedio.qtd >' => 0),
 			'recursive' => -1
 		);
 
 		// --- Realiza a busca ---
 		$remedios = $this->Remedio->find('all', $params);
-		
+
 		// --- Envia para a view ---
 		$dados = array (
 			'remedios' => $remedios,
@@ -76,7 +76,7 @@ class RemediosController extends AppController {
 			$remedios = $this->Remedio->Indicacao->find('all', array(
 					'conditions' => array(
 						'Indicacao.id' => $dados['Remedio']['Indicacao'],
-						)				
+						)
 					)
 			);
 
@@ -86,7 +86,7 @@ class RemediosController extends AppController {
 				'titulo' => 'Resultado da busca'
 			);
 			$this->set($dados);
-			
+
 		} else {
 
 			// --- Se não for post redireciona para buscar ---
@@ -106,14 +106,14 @@ class RemediosController extends AppController {
 			$valida = true;
 
 			// --- Checa se os campos foram preenchidos ---
-			if (empty($dados['Remedio']['nome']) || empty($dados['Indicacao']['Indicacao']) || empty($dados['Remedio']['posologia']) || empty($dados['Remedio']['contraIndicacao']) || empty($dados['Remedio']['validade'])) {
+			if (empty($dados['Remedio']['nome']) || empty($dados['Indicacao']['Indicacao']) || empty($dados['Remedio']['posologia']) || empty($dados['Remedio']['contraIndicacao']) || empty($dados['Remedio']['qtd']) || empty($dados['Remedio']['validade'])) {
 				$this->Session->setFlash('Todos os campos devem ser preenchidos.', 'default', array('class' => 'alert alert-danger'));
 				$valida = false;
 			}
 
 			// --- formata data ---
 			$dados['Remedio']['validade'] = @date_format(date_create_from_format('d/m/Y', $dados['Remedio']['validade']), 'Y-m-d');
-			
+
 			// --- Se passou pela validação ---
 			if ($valida) {
 
@@ -131,8 +131,8 @@ class RemediosController extends AppController {
 					$this->Session->setFlash($msg, 'default', array('class' => 'alert alert-success'));
 
 					// --- Nova quantidade de remédios ---
-					$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d')))));
-					$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade <=' => date('Y-m-d')))));
+					$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd >' => 0))));
+					$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd' => 0))));
 
 					return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 				} else {
@@ -140,7 +140,7 @@ class RemediosController extends AppController {
 					return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 				}
 			}
-			
+
 		}
 
 		// --- Recupera o valor para preencher o input ---
@@ -179,8 +179,8 @@ class RemediosController extends AppController {
 			$this->Session->setFlash('O remédio <b>'. $remedio['Remedio']['nome'] .'</b> foi apagado com sucesso.', 'default', array('class' => 'alert alert-success'));
 
 			// --- Nova quantidade de remédios ---
-			$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d')))));
-			$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade <=' => date('Y-m-d')))));
+			$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd >' => 0))));
+			$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd' => 0))));
 
 			// --- Redireciona ---
 			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
@@ -196,21 +196,50 @@ class RemediosController extends AppController {
 		if (!$this->Remedio->exists() || !$this->Remedio->find('count', array('conditions' => array('Remedio.id' => $id, 'Remedio.usuario_id' => $this->Auth->user('id'))))) {
 			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 		} else {
-			// --- Recupera o nome do remédio ---
+			// --- Recupera remédio ---
 			$this->Remedio->id = $id;
 			$remedio = $this->Remedio->read();
 
-			// --- Apaga o remédio ---
-			$this->Remedio->save(array('id' => $id, 'validade' => date('Y-m-d', strtotime('-1 day'))));
+			// --- Atualiza o remédio ---
+			$this->Remedio->save(array('id' => $id, 'qtd' => 0));
 			$this->Session->setFlash('O remédio <b>'. $remedio['Remedio']['nome'] .'</b> Acabou.', 'default', array('class' => 'alert alert-success'));
 
 			// --- Nova quantidade de remédios ---
-			$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade >' => date('Y-m-d')))));
-			$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade <=' => date('Y-m-d')))));
+			$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd >' => 0))));
+			$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd' => 0))));
 
 			// --- Redireciona ---
 			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 		}
+	}
+
+	// --- menos1 ----------------------------------------------------------------
+	public function menos1($id) {
+
+		// --- Checa se o id existe e se pertence ao usuário ---
+		$this->Remedio->id = $id;
+		if (!$this->Remedio->exists() || !$this->Remedio->find('count', array('conditions' => array('Remedio.id' => $id, 'Remedio.usuario_id' => $this->Auth->user('id'))))) {
+			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
+		} else {
+			// --- Recupera remédio ---
+			$this->Remedio->id = $id;
+			$remedio = $this->Remedio->read();
+
+			// --- Atualiza o remédio ---
+			$this->Remedio->save(array('id' => $id, 'qtd' => $remedio['Remedio']['qtd']-1));
+			if ($remedio['Remedio']['qtd']-1 == 0) {
+				// --- Nova quantidade de remédios ---
+				$this->Session->write('qtdRemedios' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd >' => 0))));
+				$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.qtd' => 0))));
+				$this->Session->setFlash('O remédio <b>'. $remedio['Remedio']['nome'] .'</b> Acabou.', 'default', array('class' => 'alert alert-success'));
+			} else {
+				$this->Session->setFlash('Foi retirado 1 do estoque de <b>'. $remedio['Remedio']['nome'] .'</b>.', 'default', array('class' => 'alert alert-success'));
+			}
+
+			// --- Redireciona ---
+			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
+		}
+
 	}
 
 }

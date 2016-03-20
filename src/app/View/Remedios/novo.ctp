@@ -5,6 +5,7 @@ echo $this->Form->input('nome', array('class' => 'form-control', 'label' => 'Nom
 echo $this->Form->input('Indicacao.Indicacao', array('class' => 'form-control', 'label' => 'Indicações:', 'multiple' => true, 'options' => $indicacoes));
 echo $this->Form->input('posologia', array('class' => 'form-control', 'label' => 'Posologia:'));
 echo $this->Form->input('contraIndicacao', array('class' => 'form-control', 'label' => 'Contra-Indicação:'));
+echo $this->Form->input('qtd', array('class' => 'form-control qtd', 'label' => 'Quantidade:'));
 echo $this->Form->input('validade', array('class' => 'form-control data', 'label' => 'Validade:', 'type' => 'text', 'id' => 'data'));
 echo "<center>";
 echo $this->Html->link('Cancelar', 'javascript:window.history.back()', array('class' => 'btn btn-default'));
