@@ -3902,6 +3902,25 @@ class FormHelperTest extends CakeTestCase {
 			'/fieldset'
 		);
 		$this->assertTags($result, $expected);
+
+		$result = $this->Form->radio(
+			'Model.multibyte',
+			array('男性' => '男性')
+		);
+		$expected = array(
+			'input' => array(
+				'type' => 'hidden', 'name' => 'data[Model][multibyte]',
+				'id' => 'ModelMultibyte_', 'value' => '',
+			),
+			array('input' => array(
+				'type' => 'radio', 'name' => 'data[Model][multibyte]',
+				'id' => 'ModelMultibyte男性', 'value' => '男性')
+			),
+			array('label' => array('for' => 'ModelMultibyte男性')),
+			'男性',
+			'/label',
+		);
+		$this->assertTags($result, $expected);
 	}
 
 /**
@@ -4411,6 +4430,34 @@ class FormHelperTest extends CakeTestCase {
 			'hiddenField' => false
 		));
 		$this->assertTextNotContains('"Model1Field"', $result);
+	}
+
+/**
+ * Test that radio() accepts a deep array for options
+ *
+ * @return void
+ */
+	public function testRadioOptionsArray() {
+		$result = $this->Form->input('Model.field', array(
+			'type' => 'radio',
+			'legend' => false,
+			'div' => false,
+			'options' => array(
+				'1' => array('name' => 'Option A', 'title' => 'A Title'),
+				'2' => array('name' => 'Option B', 'data-foo' => 'bar'))
+		));
+		$expected = array(
+			array('input' => array('type' => 'hidden', 'name' => 'data[Model][field]', 'id' => 'ModelField_', 'value' => '')),
+			array('input' => array('type' => 'radio', 'name' => 'data[Model][field]', 'id' => 'ModelField1', 'value' => '1', 'title' => 'A Title')),
+			array('label' => array('for' => 'ModelField1')),
+			'Option A',
+			'/label',
+			array('input' => array('type' => 'radio', 'name' => 'data[Model][field]', 'id' => 'ModelField2', 'value' => '2', 'data-foo' => 'bar')),
+			array('label' => array('for' => 'ModelField2')),
+			'Option B',
+			'/label'
+		);
+		$this->assertTags($result, $expected);
 	}
 
 /**
@@ -7428,6 +7475,53 @@ class FormHelperTest extends CakeTestCase {
 			)
 		);
 		$this->assertNotContains('value="' . date('d') . '" selected="selected"', $result);
+	}
+
+/**
+ * testInputDate method
+ *
+ * Test various inputs with type date and different option attributes.
+ *
+ * @return void
+ */
+	public function testInputDateOptions() {
+		$this->Form->create('User');
+
+		$result = $this->Form->input('date',
+			array(
+				'label' => false,
+				'type' => 'day',
+				'class' => 'form-control'
+			)
+		);
+		$this->assertContains('class="form-control"', $result);
+
+		$result = $this->Form->input('date',
+			array(
+				'label' => false,
+				'type' => 'month',
+				'class' => 'form-control'
+			)
+		);
+		$this->assertContains('class="form-control"', $result);
+
+		$result = $this->Form->input('date',
+			array(
+				'label' => false,
+				'type' => 'year',
+				'class' => 'form-control'
+			)
+		);
+		$this->assertContains('class="form-control"', $result);
+
+		$result = $this->Form->input('date',
+			array(
+				'label' => false,
+				'type' => 'hour',
+				'class' => 'form-control'
+			)
+		);
+		$this->assertContains('class="form-control"', $result);
 	}
 
 /**

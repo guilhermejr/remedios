@@ -94,7 +94,7 @@ class IndicacoesController extends AppController {
 			// --- Apaga a indicação e redireciona ---
 			$this->Indicacao->delete($id);
 			$this->Session->setFlash('A indicação <b>'. $indicacao['Indicacao']['descricao'] .'</b> foi apagada com sucesso.', 'default', array('class' => 'alert alert-success'));
-			$this->redirect(array('controller' => 'indicacoes', 'action' => 'index'));
+			return $this->redirect(array('controller' => 'indicacoes', 'action' => 'index'));
 		}
 
 	}	

@@ -7685,6 +7685,218 @@ class ModelWriteTest extends BaseModelTest {
 	}
 
 /**
+ * Test that boolean fields don't cause saveMany to fail
+ *
+ * @return void
+ */
+	public function testSaveManyBooleanFields() {
+		$this->loadFixtures('Item', 'Syfile', 'Image');
+		$data = array(
+			array(
+				'Item' => array(
+					'name' => 'testing',
+					'syfile_id' => 1,
+					'published' => false
+				)
+			),
+			array(
+				'Item' => array(
+					'name' => 'testing 2',
+					'syfile_id' => 1,
+					'published' => true
+				)
+			),
+		);
+		$item = ClassRegistry::init('Item');
+		$result = $item->saveMany($data, array('atomic' => false));
+
+		$this->assertCount(2, $result, '2 records should have been saved.');
+		$this->assertTrue($result[0], 'Both should have succeded');
+		$this->assertTrue($result[1], 'Both should have succeded');
+	}
+
+/**
+ * testSaveManyDeepHasManyValidationFailure method
+ *
+ * @return void
+ */
+	public function testSaveManyDeepHasManyValidationFailure() {
+		$this->loadFixtures('Article', 'Comment');
+		$TestModel = new Article();
+		$TestModel->Comment->validate = array(
+			'comment' => array(
+				'notEmpty' => array(
+					'rule' => array('notEmpty'),
+				)
+			)
+		);
+
+		$result = $TestModel->saveMany(array(
+			array(
+				'user_id' => 1,
+				'title' => 'New Article',
+				'body' => 'This article contains a invalid comment',
+				'Comment' => array(
+					array(
+						'user_id' => 1,
+						'comment' => ''
+					)
+				)
+			)
+		), array('deep' => true));
+		$this->assertFalse($result);
+		$this->assertEquals(array(
+			array(
+				'Comment' => array(
+					array('comment' => array('notEmpty'))
+				)
+			)
+		), $TestModel->validationErrors);
+	}
+
+/**
+ * testSaveAssociatedDeepHasOneHasManyValidateTrueValidationFailure method
+ *
+ * @return void
+ */
+	public function testSaveAssociatedDeepHasOneHasManyValidateTrueValidationFailure() {
+		$this->loadFixtures('User', 'Article', 'Comment');
+		$TestModel = new UserHasOneArticle();
+		$TestModel->Article->Comment->validate = array(
+			'comment' => array(
+				'notEmpty' => array(
+					'rule' => array('notEmpty'),
+				)
+			)
+		);
+
+		$result = $TestModel->saveAssociated(array(
+			'User' => array(
+				'user' => 'hiromi',
+				'password' => '5f4dcc3b5aa765d61d8327deb882cf99',
+			),
+			'Article' => array(
+				'title' => 'Article with User',
+				'body' => 'This article will be saved with an user and contains a invalid comment',
+				'Comment' => array(
+					array(
+						'user_id' => 1,
+						'comment' => ''
+					)
+				)
+			)
+		), array('deep' => true, 'validate' => true));
+		$this->assertFalse($result);
+		$this->assertEquals(array(
+			'Article' => array(
+				'Comment' => array(
+					array('comment' => array('notEmpty'))
+				)
+			)
+		), $TestModel->validationErrors);
+	}
+
+/**
+ * testSaveAssociatedDeepBelongsToHasManyValidateTrueValidationFailure method
+ *
+ * @return void
+ */
+	public function testSaveAssociatedDeepBelongsToHasManyValidateTrueValidationFailure() {
+		$this->loadFixtures('ArticlesTag', 'Article', 'Comment');
+		$TestModel = new ArticlesTagBelongsToArticle();
+		$TestModel->Article->Comment->validate = array(
+			'comment' => array(
+				'notEmpty' => array(
+					'rule' => array('notEmpty'),
+				)
+			)
+		);
+
+		$result = $TestModel->saveAssociated(array(
+			'ArticlesTagBelongsToArticle' => array(
+				'tag_id' => 1,
+			),
+			'Article' => array(
+				'title' => 'Article with User',
+				'body' => 'This article will be saved with an user and contains a invalid comment',
+				'Comment' => array(
+					array(
+						'user_id' => 1,
+						'comment' => ''
+					)
+				)
+			)
+		), array('deep' => true, 'validate' => true));
+		$this->assertFalse($result);
+		$this->assertEquals(array(
+			'Article' => array(
+				'Comment' => array(
+					array('comment' => array('notEmpty'))
+				)
+			)
+		), $TestModel->validationErrors);
+	}
+
+/**
+ * Test that boolean fields don't cause saveAssociated to fail
+ *
+ * @return void
+ */
+	public function testSaveAssociatedHasOneBooleanFields() {
+		$this->loadFixtures('Item', 'Syfile', 'Image');
+		$data = array(
+			'Syfile' => array(
+				'image_id' => 1,
+				'name' => 'Some file',
+			),
+			'Item' => array(
+				'name' => 'testing',
+				'published' => false
+			),
+		);
+		$syfile = ClassRegistry::init('Syfile');
+		$syfile->bindModel(array('hasOne' => array('Item')), false);
+		$result = $syfile->saveAssociated($data, array('atomic' => false));
+
+		$this->assertCount(2, $result, '2 records should have been saved.');
+		$this->assertTrue($result['Syfile'], 'Both should have succeded');
+		$this->assertTrue($result['Item'], 'Both should have succeded');
+	}
+
+/**
+ * Test that boolean fields don't cause saveAssociated to fail
+ *
+ * @return void
+ */
+	public function testSaveAssociatedBelongsToBooleanFields() {
+		$this->loadFixtures('Item', 'Syfile', 'Image');
+		$data = array(
+			'Syfile' => array(
+				'image_id' => 1,
+				'name' => 'Some file',
+			),
+			'Item' => array(
+				'name' => 'testing',
+				'syfile_id' => 2,
+				'published' => false
+			),
+		);
+		$item = ClassRegistry::init('Item');
+		$item->bindModel(array(
+			'belongsTo' => array(
+				'Item' => array(
+					'foreignKey' => 'image_id'
+				)
+			)
+		), false);
+		$result = $item->saveAssociated($data, array('atomic' => false));
+
+		$this->assertCount(2, $result, '2 records should have been saved.');
+		$this->assertTrue($result['Syfile'], 'Both should have succeded');
+		$this->assertTrue($result['Item'], 'Both should have succeded');
+	}
+
+/**
  * testUpdateAllBoolean
  *
  * @return void

@@ -60,11 +60,10 @@ class Validation {
  * @return bool Success
  */
 	public static function notEmpty($check) {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
+		if (!is_scalar($check)) {
+			return false;
 		}
-
-		if (empty($check) && $check != '0') {
+		if (empty($check) && (string)$check !== '0') {
 			return false;
 		}
 		return self::_check($check, '/[^\s]+/m');
@@ -82,10 +81,6 @@ class Validation {
  * @return bool Success
  */
 	public static function alphaNumeric($check) {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
-		}
-
 		if (empty($check) && $check != '0') {
 			return false;
 		}
@@ -132,9 +127,6 @@ class Validation {
  * @return bool Success
  */
 	public static function blank($check) {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
-		}
 		return !self::_check($check, '/[^\\s]/');
 	}
 
@@ -143,7 +135,7 @@ class Validation {
  * Returns true if $check is in the proper credit card format.
  *
  * @param string|array $check credit card number to validate
- * @param string|array $type 'all' may be passed as a sting, defaults to fast which checks format of most major credit 
+ * @param string|array $type 'all' may be passed as a sting, defaults to fast which checks format of most major credit
  * cards
  *    if an array is used only the values of the array are checked.
  *    Example: array('amex', 'bankcard', 'maestro')
@@ -153,8 +145,8 @@ class Validation {
  * @see Validation::luhn()
  */
 	public static function cc($check, $type = 'fast', $deep = false, $regex = null) {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
+		if (!is_scalar($check)) {
+			return false;
 		}
 
 		$check = str_replace(array('-', ' '), '', $check);
@@ -229,6 +221,10 @@ class Validation {
 		if (is_array($check1)) {
 			extract($check1, EXTR_OVERWRITE);
 		}
+
+		if ((float)$check1 != $check1) {
+			return false;
+		}
 		$operator = str_replace(array(' ', "\t", "\n", "\r", "\0", "\x0B"), '', strtolower($operator));
 
 		switch ($operator) {
@@ -283,8 +279,8 @@ class Validation {
  * @return bool Success
  */
 	public static function custom($check, $regex = null) {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
+		if (!is_scalar($check)) {
+			return false;
 		}
 		if ($regex === null) {
 			self::$errors[] = __d('cake_dev', 'You must define a regular expression for %s', 'Validation::custom()');
@@ -455,7 +451,7 @@ class Validation {
  * Validates for an email address.
  *
  * Only uses getmxrr() checking for deep validation if PHP 5.3.0+ is used, or
- * any PHP version on a non-windows distribution
+ * any PHP version on a non-Windows distribution
  *
  * @param string $check Value to check
  * @param bool $deep Perform a deeper validation (if true), by also checking availability of host
@@ -463,10 +459,6 @@ class Validation {
  * @return bool Success
  */
 	public static function email($check, $deep = false, $regex = null) {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
-		}
-
 		if ($regex === null) {
 			$regex = '/^[\p{L}0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[\p{L}0-9!#$%&\'*+\/=?^_`{|}~-]+)*@' . self::$_pattern['hostname'] . '$/ui';
 		}
@@ -594,7 +586,7 @@ class Validation {
 		$defaults = array('in' => null, 'max' => null, 'min' => null);
 		$options += $defaults;
 
-		$check = array_filter((array)$check);
+		$check = array_filter((array)$check, 'strlen');
 		if (empty($check)) {
 			return false;
 		}
@@ -653,10 +645,6 @@ class Validation {
  * @return bool Success
  */
 	public static function phone($check, $regex = null, $country = 'all') {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
-		}
-
 		if ($regex === null) {
 			switch ($country) {
 				case 'us':
@@ -698,10 +686,6 @@ class Validation {
  * @return bool Success
  */
 	public static function postal($check, $regex = null, $country = 'us') {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
-		}
-
 		if ($regex === null) {
 			switch ($country) {
 				case 'uk':
@@ -744,6 +728,9 @@ class Validation {
 		if (!is_numeric($check)) {
 			return false;
 		}
+		if ((float)$check != $check) {
+			return false;
+		}
 		if (isset($lower) && isset($upper)) {
 			return ($check > $lower && $check < $upper);
 		}
@@ -760,10 +747,6 @@ class Validation {
  * @deprecated Deprecated 2.6. Will be removed in 3.0.
  */
 	public static function ssn($check, $regex = null, $country = null) {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
-		}
-
 		if ($regex === null) {
 			switch ($country) {
 				case 'dk':
@@ -885,33 +868,10 @@ class Validation {
  * @return bool Success of match
  */
 	protected static function _check($check, $regex) {
-		if (is_string($regex) && preg_match($regex, $check)) {
+		if (is_string($regex) && is_scalar($check) && preg_match($regex, $check)) {
 			return true;
 		}
 		return false;
-	}
-
-/**
- * Get the values to use when value sent to validation method is
- * an array.
- *
- * @param array $params Parameters sent to validation method
- * @return void
- */
-	protected static function _defaults($params) {
-		self::_reset();
-		$defaults = array(
-			'check' => null,
-			'regex' => null,
-			'country' => null,
-			'deep' => false,
-			'type' => null
-		);
-		$params += $defaults;
-		if ($params['country'] !== null) {
-			$params['country'] = mb_strtolower($params['country']);
-		}
-		return $params;
 	}
 
 /**
@@ -923,8 +883,8 @@ class Validation {
  * @see http://en.wikipedia.org/wiki/Luhn_algorithm
  */
 	public static function luhn($check, $deep = false) {
-		if (is_array($check)) {
-			extract(self::_defaults($check));
+		if (!is_scalar($check)) {
+			return false;
 		}
 		if ($deep !== true) {
 			return true;

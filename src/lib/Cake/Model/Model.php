@@ -1717,7 +1717,7 @@ class Model extends Object implements CakeEventListener {
  *   - validate: Set to true/false to enable or disable validation.
  *   - fieldList: An array of fields you want to allow for saving.
  *   - callbacks: Set to false to disable callbacks. Using 'before' or 'after'
- *      will enable only those callbacks.
+ *     will enable only those callbacks.
  *   - `counterCache`: Boolean to control updating of counter caches (if any)
  *
  * @param array $fieldList List of fields to allow to be saved
@@ -2335,11 +2335,11 @@ class Model extends Object implements CakeEventListener {
 					if ($options['deep']) {
 						$saved = $this->saveAssociated($record, array('atomic' => false) + $options);
 					} else {
-						$saved = $this->save($record, array('atomic' => false) + $options);
+						$saved = (bool)$this->save($record, array('atomic' => false) + $options);
 					}
 				}
 
-				$validates = ($validates && ($saved === true || (is_array($saved) && !in_array(false, $saved, true))));
+				$validates = ($validates && ($saved === true || (is_array($saved) && !in_array(false, Hash::flatten($saved), true))));
 				if (!$validates) {
 					$validationErrors[$key] = $this->validationErrors;
 				}
@@ -2478,9 +2478,9 @@ class Model extends Object implements CakeEventListener {
 					if ($options['deep']) {
 						$saved = $Model->saveAssociated($values, array('atomic' => false) + $options);
 					} else {
-						$saved = $Model->save($values, array('atomic' => false) + $options);
+						$saved = (bool)$Model->save($values, array('atomic' => false) + $options);
 					}
-					$validates = ($saved === true || (is_array($saved) && !in_array(false, $saved, true)));
+					$validates = ($saved === true || (is_array($saved) && !in_array(false, Hash::flatten($saved), true)));
 				}
 
 				if ($validates) {
@@ -2534,11 +2534,11 @@ class Model extends Object implements CakeEventListener {
 							if ($options['deep']) {
 								$saved = $Model->saveAssociated($values, array('atomic' => false) + $options);
 							} else {
-								$saved = $Model->save($values, $options);
+								$saved = (bool)$Model->save($values, $options);
 							}
 						}
 
-						$validates = ($validates && ($saved === true || (is_array($saved) && !in_array(false, $saved, true))));
+						$validates = ($validates && ($saved === true || (is_array($saved) && !in_array(false, Hash::flatten($saved), true))));
 						if (!$validates) {
 							$validationErrors[$association] = $Model->validationErrors;
 						}

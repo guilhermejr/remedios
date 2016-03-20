@@ -1471,6 +1471,15 @@ class FormHelper extends AppHelper {
  * Creates a set of radio widgets. Will create a legend and fieldset
  * by default. Use $options to control this
  *
+ * You can also customize each radio input element using an array of arrays:
+ *
+ * ```
+ * $options = array(
+ *  array('name' => 'United states', 'value' => 'US', 'title' => 'My title'),
+ *  array('name' => 'Germany', 'value' => 'DE', 'class' => 'de-de', 'title' => 'Another title'),
+ * );
+ * ```
+ *
  * ### Attributes:
  *
  * - `separator` - define the string in between the radio buttons
@@ -1553,6 +1562,15 @@ class FormHelper extends AppHelper {
 		$this->_domIdSuffixes = array();
 		foreach ($options as $optValue => $optTitle) {
 			$optionsHere = array('value' => $optValue, 'disabled' => false);
+			if (is_array($optTitle)) {
+				if (isset($optTitle['value'])) {
+					$optionsHere['value'] = $optTitle['value'];
+				}
+
+				$optionsHere += $optTitle;
+				$optTitle = $optionsHere['name'];
+				unset($optionsHere['name']);
+			}
 
 			if (isset($value) && strval($optValue) === strval($value)) {
 				$optionsHere['checked'] = 'checked';
@@ -1572,7 +1590,7 @@ class FormHelper extends AppHelper {
 			if (is_array($between)) {
 				$optTitle .= array_shift($between);
 			}
-			$allOptions = array_merge($attributes, $optionsHere);
+			$allOptions = $optionsHere + $attributes;
 			$out[] = $this->Html->useTag('radio', $attributes['name'], $tagName,
 				array_diff_key($allOptions, array('name' => null, 'type' => null, 'id' => null)),
 				$optTitle
@@ -2213,6 +2231,11 @@ class FormHelper extends AppHelper {
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::year
  */
 	public function year($fieldName, $minYear = null, $maxYear = null, $attributes = array()) {
+		if (is_array($minYear)) {
+			$attributes = $minYear;
+			$minYear = null;
+		}
+
 		$attributes += array('empty' => true, 'value' => null);
 		if ((empty($attributes['value']) || $attributes['value'] === true) && $value = $this->value($fieldName)) {
 			if (is_array($value)) {
@@ -2310,6 +2333,11 @@ class FormHelper extends AppHelper {
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::hour
  */
 	public function hour($fieldName, $format24Hours = false, $attributes = array()) {
+		if (is_array($format24Hours)) {
+			$attributes = $format24Hours;
+			$format24Hours = false;
+		}
+
 		$attributes += array('empty' => true, 'value' => null);
 		$attributes = $this->_dateTimeSelected('hour', $fieldName, $attributes);
 

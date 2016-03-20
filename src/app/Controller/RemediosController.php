@@ -183,7 +183,7 @@ class RemediosController extends AppController {
 			$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade <=' => date('Y-m-d')))));
 
 			// --- Redireciona ---
-			$this->redirect(array('controller' => 'remedios', 'action' => 'index'));
+			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 		}
 
 	}
@@ -209,7 +209,7 @@ class RemediosController extends AppController {
 			$this->Session->write('qtdCompras' ,$this->Remedio->find('count', array('conditions' => array('Usuario.id' => $this->Auth->user('id'), 'Remedio.validade <=' => date('Y-m-d')))));
 
 			// --- Redireciona ---
-			$this->redirect(array('controller' => 'remedios', 'action' => 'index'));
+			return $this->redirect(array('controller' => 'remedios', 'action' => 'index'));
 		}
 	}
 
